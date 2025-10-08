@@ -1,0 +1,16 @@
+[
+  {
+    "name": "territory_id",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "Territory ID (UUID)",
+    "fields": []
+  },
+  {
+    "name": "search_id",
+    "mode": "REQUIRED",
+    "type": "STRING",
+    "description": "Search ID (UUID)",
+    "fields": []
+  }
+]

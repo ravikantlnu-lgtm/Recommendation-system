@@ -1,0 +1,34 @@
+division,material,code,source
+Finishes,Acoustic Insulation,981,ConstructConnect
+Finishes,Acoustical Ceiling Suspension Assemblies,953,ConstructConnect
+Finishes,Acoustical Ceilings,951,ConstructConnect
+Finishes,Gypsum Board,929,ConstructConnect
+Finishes,Gypsum Plastering,923,ConstructConnect
+Finishes,Supports For Plaster And Gypsum Board,922,ConstructConnect
+Masonry,Stone Masonry,443,ConstructConnect
+Metals,Cold-Formed Metal Joist Framing,542,ConstructConnect
+Metals,Steel Decking,531,ConstructConnect
+Metals,Steel Joist Framing,521,ConstructConnect
+Metals,Structural Metal Stud Framing,541,ConstructConnect
+Metals,Structural Steel Framing,512,ConstructConnect
+Openings,Door Hardware,871,ConstructConnect
+Openings,Metal Doors,813,ConstructConnect
+Openings,Metal Doors And Frames,811,ConstructConnect
+Openings,Metal Frames,812,ConstructConnect
+ThermalAndMoistureProtection,Applied Fireproofing,781,ConstructConnect
+ThermalAndMoistureProtection,Siding,746,ConstructConnect
+ThermalAndMoistureProtection,Vapor Retarders,726,ConstructConnect
+ThermalAndMoistureProtection,Weather Barriers,725,ConstructConnect
+,Acoustical Ceilings,9510,ConstructConnect
+,Acoustical Walls,9520,ConstructConnect
+,Architectural Woodwork,6400,ConstructConnect
+,Cold Formed Metal Framing,5400,ConstructConnect
+,Drywall/Gypsum,9250,ConstructConnect
+,Fireproofing,7250,ConstructConnect
+,Firestopping,7270,ConstructConnect
+,Insulation,7200,ConstructConnect
+,Lath & Plaster,9200,ConstructConnect
+,Metal Decking,5300,ConstructConnect
+,Metal Doors,8100,ConstructConnect
+,Stucco,9220,ConstructConnect
+,Waterproofing,7100,ConstructConnect

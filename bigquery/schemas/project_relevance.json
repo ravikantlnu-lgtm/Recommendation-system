@@ -1,0 +1,86 @@
+[
+  {
+    "name": "project_id",
+    "mode": "",
+    "type": "STRING",
+    "description": "Unique identifier for the project",
+    "fields": []
+  },
+  {
+    "name": "relevance",
+    "mode": "",
+    "type": "STRING",
+    "description": "relevance classification",
+    "fields": []
+  },
+  {
+    "name": "reasoning",
+    "mode": "",
+    "type": "STRING",
+    "description": "reasoning for relevance classification",
+    "fields": []
+  },
+  {
+    "name": "search_id",
+    "mode": "",
+    "type": "STRING",
+    "description": "Search ID",
+    "fields": []
+  },
+  {
+    "name": "territory_id",
+    "mode": "",
+    "type": "STRING",
+    "description": "Territory ID",
+    "fields": []
+  },
+  {
+    "name": "time_created",
+    "mode": "",
+    "type": "DATETIME",
+    "description": "Time Created from Construct_connect_feed",
+    "fields": []
+  },
+  {
+    "name": "source",
+    "mode": "",
+    "type": "STRING",
+    "description": "lead source (cmd,other,etc)",
+    "fields": []
+  },
+  {
+    "name": "modified_on",
+    "mode": "",
+    "type": "TIMESTAMP",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "distance",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "confidence", 
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  }, 
+  {
+    "name": "materials_valuation", 
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "Estimated value of materials for the project in JSON format",
+    "fields": []
+  }, 
+  {
+    "name": "batch_id", 
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "name": "category_type",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "sub category",
+    "fields": []
+  },
+  {
+    "name": "parent_category",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "Parent category",
+    "fields": []
+  },
+  {
+    "name": "value",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "sub category value",
+    "fields": []
+  },
+  {
+    "name": "source",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "data source",
+    "fields": []
+  }
+]

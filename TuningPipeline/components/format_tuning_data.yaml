@@ -1,0 +1,254 @@
+# PIPELINE DEFINITION
+# Name: format-tuning-data
+# Description: Loads, preprocesses data for fine-tuning, saves to GCS
+# Inputs:
+#    bucket: str
+#    dataset_gcs_uri: str
+#    id_col: str
+#    output_filename: str
+#    project_id: str
+#    prompt: str
+#    prompt_type: str [Default: 'parts']
+#    query_col: str
+#    response_col: str
+#    search_col: str
+#    seed: int [Default: 42.0]
+#    training_split: float [Default: 0.8]
+# Outputs:
+#    X_test_output: system.Dataset
+#    formatted_training_dataset_gcs_uri: str
+#    y_test_output: system.Dataset
+components:
+  comp-format-tuning-data:
+    executorLabel: exec-format-tuning-data
+    inputDefinitions:
+      parameters:
+        bucket:
+          parameterType: STRING
+        dataset_gcs_uri:
+          parameterType: STRING
+        id_col:
+          parameterType: STRING
+        output_filename:
+          parameterType: STRING
+        project_id:
+          parameterType: STRING
+        prompt:
+          parameterType: STRING
+        prompt_type:
+          defaultValue: parts
+          isOptional: true
+          parameterType: STRING
+        query_col:
+          parameterType: STRING
+        response_col:
+          parameterType: STRING
+        search_col:
+          parameterType: STRING
+        seed:
+          defaultValue: 42.0
+          isOptional: true
+          parameterType: NUMBER_INTEGER
+        training_split:
+          defaultValue: 0.8
+          isOptional: true
+          parameterType: NUMBER_DOUBLE
+    outputDefinitions:
+      artifacts:
+        X_test_output:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+        y_test_output:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+      parameters:
+        formatted_training_dataset_gcs_uri:
+          parameterType: STRING
+deploymentSpec:
+  executors:
+    exec-format-tuning-data:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - format_tuning_data
+        command:
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          _KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef format_tuning_data(project_id: str,\n                bucket:\
+          \ str,\n                dataset_gcs_uri: str,\n                prompt: str,\n\
+          \                id_col: str,\n                search_col: str,\n      \
+          \          query_col: str,\n                response_col: str,\n       \
+          \         output_filename: str,\n                X_test_output: Output[Dataset],\n\
+          \                y_test_output: Output[Dataset],\n                prompt_type:\
+          \ str = \"parts\",\n                training_split: float = .8,\n      \
+          \          seed: int = 42,\n                ) -> NamedTuple('outputs', [('formatted_training_dataset_gcs_uri',\
+          \ str)]):\n    \"\"\" \n    Loads, preprocesses data for fine-tuning, saves\
+          \ to GCS\n\n    \"\"\"\n\n    import logging\n    import pandas as pd \n\
+          \    import json\n    from sklearn.model_selection import train_test_split\n\
+          \    from utils import download_file_from_gcs, upload_file_to_gcs, row_to_content_parts,\
+          \ row_to_embedded_prompt\n\n    # Download dataset from GCS\n    logging.info(f\"\
+          Downloading dataset from GCS: {dataset_gcs_uri}\")\n    filename = 'preprocessed_data.csv'\n\
+          \    download_file_from_gcs(bucket_name=bucket, \n                     \
+          \      blob_name=dataset_gcs_uri.replace(f'gs://{bucket}/', ''),\n     \
+          \                      local_file_path=filename)\n    df = pd.read_csv(filename)\n\
+          \n    # Split data into training and testing sets\n    logging.info(\"Splitting\
+          \ data into training and testing sets...\")\n    X = df.drop(columns = [response_col])\n\
+          \    y = df[response_col]\n    X_train, X_test, y_train, y_test = train_test_split(X,\
+          \ y, train_size=training_split, random_state=seed)\n\n    # Add ID column\
+          \ back \n    y_train = pd.concat([pd.DataFrame(X_train[id_col]), y_train],\
+          \ axis=1)\n    y_test = pd.concat([pd.DataFrame(X_test[id_col]), y_test],\
+          \ axis=1)\n\n    # Format training data\n    logging.info(\"Formatting training\
+          \ data as parts...\")\n    formatted_training_data = []\n    for index,\
+          \ row in X_train.iterrows(): \n        try: \n\n            if prompt_type\
+          \ == \"parts\": \n                input_data_parts = row_to_content_parts(row\
+          \ = row, \n                                                            prompt\
+          \ = prompt, \n                                                         \
+          \   search_col = search_col, \n                                        \
+          \                    query_col = query_col, \n                         \
+          \                                   examples = True) \n            elif\
+          \ prompt_type == \"embedded\":\n                input_data_parts = row_to_embedded_prompt(row\
+          \ = row, \n                                                            prompt\
+          \ = prompt, \n                                                         \
+          \   search_col = search_col, \n                                        \
+          \                    query_col = query_col, \n                         \
+          \                                   examples = True)\n\n            # Format\
+          \ response as json\n            output_data_json = y_train.loc[index].to_json()\
+          \ \n\n            # Construct content row\n            content_row = {\"\
+          contents\": []}\n            content_row[\"contents\"].append({\"role\"\
+          : \"user\", \"parts\": input_data_parts})\n            content_row[\"contents\"\
+          ].append({\"role\": \"model\", \"parts\": [{\"text\": output_data_json}]})\n\
+          \n            # Add record to formatted training data\n            formatted_training_data.append(content_row)\n\
+          \        except Exception as e:\n            logging.error(f\"Error formatting\
+          \ row {index}: {str(e)}\")\n            continue\n\n    logging.info(f\"\
+          Formatted training data: {formatted_training_data[0]['contents']}\")  #\
+          \ Print first entry for debugging\n\n    # Save JSONL training data to local\
+          \ path \n    output_jsonl = f\"{output_filename}_{prompt_type}.jsonl\"\n\
+          \    tmp = 'formatted_training_data.jsonl'\n    with open(tmp, 'w') as f:\n\
+          \        for record in formatted_training_data:\n            f.write(json.dumps(record)\
+          \ + '\\n')\n\n    # Upload formatted training data to GCS\n    try: \n \
+          \       logging.info(f\"Uploading file to bucket: {bucket} with filename:\
+          \ {output_jsonl}\")\n        formatted_training_dataset_gcs_uri = upload_file_to_gcs(tmp,\
+          \ bucket, output_jsonl)\n        logging.info(f\"File {output_filename}\
+          \ successfully uploaded to GCS bucket {formatted_training_dataset_gcs_uri}\"\
+          )\n    except Exception as e:\n        logging.error(f\"Failed to upload\
+          \ file {output_filename} to GCS. Error: {str(e)}\")\n        raise\n\n \
+          \   logging.info(f\"Formatted training dataset GCS URI: {formatted_training_dataset_gcs_uri}\"\
+          )\n\n    logging.info(f\"Saving test data to output dataset paths...\")\n\
+          \    # Save test data to output dataset paths\n    X_test.to_csv(X_test_output.path,\
+          \ index=False)\n    y_test.to_csv(y_test_output.path, index=False)\n\n \
+          \   outputs = NamedTuple('outputs', [('formatted_training_dataset_gcs_uri',\
+          \ str)])\n\n    return outputs(formatted_training_dataset_gcs_uri)\n\n"
+        image: us-central1-docker.pkg.dev/proj-sales-recommender-dev/model-tuning/components:latest
+pipelineInfo:
+  name: format-tuning-data
+root:
+  dag:
+    outputs:
+      artifacts:
+        X_test_output:
+          artifactSelectors:
+          - outputArtifactKey: X_test_output
+            producerSubtask: format-tuning-data
+        y_test_output:
+          artifactSelectors:
+          - outputArtifactKey: y_test_output
+            producerSubtask: format-tuning-data
+      parameters:
+        formatted_training_dataset_gcs_uri:
+          valueFromParameter:
+            outputParameterKey: formatted_training_dataset_gcs_uri
+            producerSubtask: format-tuning-data
+    tasks:
+      format-tuning-data:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-format-tuning-data
+        inputs:
+          parameters:
+            bucket:
+              componentInputParameter: bucket
+            dataset_gcs_uri:
+              componentInputParameter: dataset_gcs_uri
+            id_col:
+              componentInputParameter: id_col
+            output_filename:
+              componentInputParameter: output_filename
+            project_id:
+              componentInputParameter: project_id
+            prompt:
+              componentInputParameter: prompt
+            prompt_type:
+              componentInputParameter: prompt_type
+            query_col:
+              componentInputParameter: query_col
+            response_col:
+              componentInputParameter: response_col
+            search_col:
+              componentInputParameter: search_col
+            seed:
+              componentInputParameter: seed
+            training_split:
+              componentInputParameter: training_split
+        taskInfo:
+          name: format-tuning-data
+  inputDefinitions:
+    parameters:
+      bucket:
+        parameterType: STRING
+      dataset_gcs_uri:
+        parameterType: STRING
+      id_col:
+        parameterType: STRING
+      output_filename:
+        parameterType: STRING
+      project_id:
+        parameterType: STRING
+      prompt:
+        parameterType: STRING
+      prompt_type:
+        defaultValue: parts
+        isOptional: true
+        parameterType: STRING
+      query_col:
+        parameterType: STRING
+      response_col:
+        parameterType: STRING
+      search_col:
+        parameterType: STRING
+      seed:
+        defaultValue: 42.0
+        isOptional: true
+        parameterType: NUMBER_INTEGER
+      training_split:
+        defaultValue: 0.8
+        isOptional: true
+        parameterType: NUMBER_DOUBLE
+  outputDefinitions:
+    artifacts:
+      X_test_output:
+        artifactType:
+          schemaTitle: system.Dataset
+          schemaVersion: 0.0.1
+      y_test_output:
+        artifactType:
+          schemaTitle: system.Dataset
+          schemaVersion: 0.0.1
+    parameters:
+      formatted_training_dataset_gcs_uri:
+        parameterType: STRING
+schemaVersion: 2.1.0
+sdkVersion: kfp-2.10.0

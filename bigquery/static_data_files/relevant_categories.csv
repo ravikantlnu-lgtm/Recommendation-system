@@ -1,0 +1,243 @@
+category_type,parent_category,value,source
+primary,,Airport,construct_connect
+primary,,Apartments,construct_connect
+primary,,Auditoriums,construct_connect
+primary,,Bank,construct_connect
+primary,,"College, University",construct_connect
+primary,,Condominiums,construct_connect
+primary,,Courthouses,construct_connect
+primary,,Dormitories,construct_connect
+primary,,"Elementary, Pre Schools",construct_connect
+primary,,Fire and Police Stations,construct_connect
+primary,,Food Stores,construct_connect
+primary,,Government - Misc. Bldgs.,construct_connect
+primary,,Government Offices,construct_connect
+primary,,High Schools,construct_connect
+primary,,"Hospitals, Clinics",construct_connect
+primary,,Hotels,construct_connect
+primary,,Junior High Schools,construct_connect
+primary,,Libraries,construct_connect
+primary,,Medical Offices,construct_connect
+primary,,Military - Misc.,construct_connect
+primary,,Military Housing,construct_connect
+primary,,Military Offices,construct_connect
+primary,,Museums,construct_connect
+primary,,Nursing Homes,construct_connect
+primary,,Offices,construct_connect
+primary,,Post Offices,construct_connect
+primary,,Prisons,construct_connect
+primary,,Religious Auditoriums,construct_connect
+primary,,Rental Warehouses,construct_connect
+primary,,Restaurants,construct_connect
+primary,,Retail Stores,construct_connect
+primary,,Shopping Centers,construct_connect
+primary,,"Special, Vocational Schools",construct_connect
+primary,,Sports Arenas/Convention Centers,construct_connect
+primary,,Warehouses,construct_connect
+primary,,Athletic Bldgs,construct_connect
+primary,,Automotive,construct_connect
+primary,,Cafeterias,construct_connect
+primary,,"Clubs, Community Centers",construct_connect
+primary,,Entertainment,construct_connect
+primary,,Golf Course / Country Club,construct_connect
+primary,,Laboratories,construct_connect
+primary,,Transportation Terminals,construct_connect
+primary,,Water and Sewage Treatment Plants,construct_connect
+sub_category,CIVIL,Airport,construct_connect
+sub_category,COMMERCIAL,Offices,construct_connect
+sub_category,COMMERCIAL,Transportation Terminals,construct_connect
+sub_category,COMMERCIAL,Rental Warehouses,construct_connect
+sub_category,COMMERCIAL,Airport,construct_connect
+sub_category,COMMERCIAL,Laboratories,construct_connect
+sub_category,COMMUNITY,"Clubs, Community Centers",construct_connect
+sub_category,COMMUNITY,Transportation Terminals,construct_connect
+sub_category,COMMUNITY,Golf Course / Country Club,construct_connect
+sub_category,COMMUNITY,Broadcast Studios,construct_connect
+sub_category,COMMUNITY,Laboratories,construct_connect
+sub_category,COMMUNITY,Museums,construct_connect
+sub_category,COMMUNITY,Offices,construct_connect
+sub_category,COMMUNITY,Sports Arenas/Convention Centers,construct_connect
+sub_category,COMMUNITY,Rental Warehouses,construct_connect
+sub_category,COMMUNITY,Libraries,construct_connect
+sub_category,COMMUNITY,Auditoriums,construct_connect
+sub_category,COMMUNITY,Religious Auditoriums,construct_connect
+sub_category,COMMUNITY,Airport,construct_connect
+sub_category,EDUCATIONAL,"Elementary, Pre Schools, High Schools, Junior High Schools, Special, Vocational Schools",construct_connect
+sub_category,EDUCATIONAL,"College, University",construct_connect
+sub_category,EDUCATIONAL,"Clubs, Community Centers",construct_connect
+sub_category,EDUCATIONAL,Museums,construct_connect
+sub_category,EDUCATIONAL,Offices,construct_connect
+sub_category,EDUCATIONAL,Religious Auditoriums,construct_connect
+sub_category,EDUCATIONAL,Auditoriums,construct_connect
+sub_category,EDUCATIONAL,Sports Arenas/Convention Centers,construct_connect
+sub_category,EDUCATIONAL,Athletic Bldgs,construct_connect
+sub_category,EDUCATIONAL,Libraries,construct_connect
+sub_category,EDUCATIONAL,Cafeterias,construct_connect
+sub_category,EDUCATIONAL,Airport,construct_connect
+sub_category,EDUCATIONAL,Dormitories,construct_connect
+sub_category,EDUCATIONAL,"Special, Vocational Schools",construct_connect
+sub_category,EDUCATIONAL,Junior High Schools,construct_connect
+sub_category,EDUCATIONAL,High Schools,construct_connect
+sub_category,EDUCATIONAL,Rental Warehouses,construct_connect
+sub_category,EDUCATIONAL,Laboratories,construct_connect
+sub_category,EDUCATIONAL,Transportation Terminals,construct_connect
+sub_category,EDUCATIONAL,Golf Course / Country Club,construct_connect
+sub_category,GOVERNMENT,Courthouses,construct_connect
+sub_category,GOVERNMENT,Fire and Police Stations,construct_connect
+sub_category,GOVERNMENT,Prisons,construct_connect
+sub_category,GOVERNMENT,Offices,construct_connect
+sub_category,GOVERNMENT,Government - Misc. Bldgs.,construct_connect
+sub_category,GOVERNMENT,Government Offices,construct_connect
+sub_category,GOVERNMENT,"Clubs, Community Centers",construct_connect
+sub_category,GOVERNMENT,Museums,construct_connect
+sub_category,GOVERNMENT,"College, University",construct_connect
+sub_category,GOVERNMENT,"Elementary, Pre Schools, High Schools, Junior High Schools, Special, Vocational Schools",construct_connect
+sub_category,GOVERNMENT,Airport,construct_connect
+sub_category,GOVERNMENT,Auditoriums,construct_connect
+sub_category,GOVERNMENT,Libraries,construct_connect
+sub_category,GOVERNMENT,Sports Arenas/Convention Centers,construct_connect
+sub_category,GOVERNMENT,Post Offices,construct_connect
+sub_category,GOVERNMENT,Rental Warehouses,construct_connect
+sub_category,GOVERNMENT,"Elementary, Pre Schools, Junior High Schools",construct_connect
+sub_category,GOVERNMENT,Religious Auditoriums,construct_connect
+sub_category,GOVERNMENT,High Schools,construct_connect
+sub_category,GOVERNMENT,Athletic Bldgs,construct_connect
+sub_category,INDUSTRIAL,Transportation Terminals,construct_connect
+sub_category,INDUSTRIAL,Golf Course / Country Club,construct_connect
+sub_category,INDUSTRIAL,Offices,construct_connect
+sub_category,INDUSTRIAL,Government - Misc. Bldgs.,construct_connect
+sub_category,INDUSTRIAL,Government Offices,construct_connect
+sub_category,INDUSTRIAL,"Elementary, Pre Schools, High Schools, Junior High Schools, Special, Vocational Schools",construct_connect
+sub_category,INDUSTRIAL,Broadcast Studios,construct_connect
+sub_category,INDUSTRIAL,"College, University",construct_connect
+sub_category,INDUSTRIAL,Airport,construct_connect
+sub_category,INDUSTRIAL,"Elementary, Pre Schools",construct_connect
+sub_category,INDUSTRIAL,Post Offices,construct_connect
+sub_category,INDUSTRIAL,Fire and Police Stations,construct_connect
+sub_category,INDUSTRIAL,Warehouses,construct_connect
+sub_category,INDUSTRIAL,Rental Warehouses,construct_connect
+sub_category,INDUSTRIAL,"Clubs, Community Centers",construct_connect
+sub_category,INDUSTRIAL,High Schools,construct_connect
+sub_category,INDUSTRIAL,Laboratories,construct_connect
+sub_category,INDUSTRIAL,Religious Auditoriums,construct_connect
+sub_category,INDUSTRIAL,"Special, Vocational Schools",construct_connect
+sub_category,INDUSTRIAL,Museums,construct_connect
+sub_category,INDUSTRIAL,Libraries,construct_connect
+sub_category,INDUSTRIAL,Athletic Bldgs,construct_connect
+sub_category,INDUSTRIAL,Sports Arenas/Convention Centers,construct_connect
+sub_category,INDUSTRIAL,Prisons,construct_connect
+sub_category,MEDICAL,Athletic Bldgs,construct_connect
+sub_category,MEDICAL,"College, University",construct_connect
+sub_category,MEDICAL,"Hospitals, Clinics",construct_connect
+sub_category,MEDICAL,Offices,construct_connect
+sub_category,MEDICAL,"Hospitals, Clinics, Medical Offices",construct_connect
+sub_category,MEDICAL,Broadcast Studios,construct_connect
+sub_category,MEDICAL,"Elementary, Pre Schools",construct_connect
+sub_category,MEDICAL,Fire and Police Stations,construct_connect
+sub_category,MEDICAL,Manufacturing,construct_connect
+sub_category,MEDICAL,Auditoriums,construct_connect
+sub_category,MEDICAL,"Clubs, Community Centers",construct_connect
+sub_category,MEDICAL,Airport,construct_connect
+sub_category,MEDICAL,Warehouses,construct_connect
+sub_category,MEDICAL,"Clubs, Community Centers, Religious Auditoriums",construct_connect
+sub_category,MEDICAL,Rental Warehouses,construct_connect
+sub_category,MEDICAL,Religious Auditoriums,construct_connect
+sub_category,MEDICAL,Government Offices,construct_connect
+sub_category,MEDICAL,Prisons,construct_connect
+sub_category,MEDICAL,Dormitories,construct_connect
+sub_category,MEDICAL,High Schools,construct_connect
+sub_category,MEDICAL,"Special, Vocational Schools",construct_connect
+sub_category,MEDICAL,Laboratories,construct_connect
+sub_category,MEDICAL,Medical Offices,construct_connect
+sub_category,MEDICAL,"Hospitals, Clinics, Medical Offices, Nursing Homes",construct_connect
+sub_category,MEDICAL,Nursing Homes,construct_connect
+sub_category,MEDICAL,"Auditoriums, Libraries",construct_connect
+sub_category,MEDICAL,Government - Misc. Bldgs.,construct_connect
+sub_category,MEDICAL,Sports Arenas/Convention Centers,construct_connect
+sub_category,MEDICAL,Transportation Terminals,construct_connect
+sub_category,MEDICAL,Golf Course / Country Club,construct_connect
+sub_category,MILITARY,"Hospitals, Clinics, Medical Offices",construct_connect
+sub_category,MILITARY,"Hospitals, Clinics",construct_connect
+sub_category,MILITARY,Dormitories,construct_connect
+sub_category,MILITARY,Offices,construct_connect
+sub_category,MILITARY,Military - Misc.,construct_connect
+sub_category,MILITARY,Medical Offices,construct_connect
+sub_category,MILITARY,Airport,construct_connect
+sub_category,MILITARY,Military Housing,construct_connect
+sub_category,MILITARY,Museums,construct_connect
+sub_category,MILITARY,Military Offices,construct_connect
+sub_category,MILITARY,Government Offices,construct_connect
+sub_category,MILITARY,Government - Misc. Bldgs.,construct_connect
+sub_category,MILITARY,Nursing Homes,construct_connect
+sub_category,MILITARY,Transportation Terminals,construct_connect
+sub_category,RESIDENTIAL,Transportation Terminals,construct_connect
+sub_category,RESIDENTIAL,Golf Course / Country Club,construct_connect
+sub_category,RESIDENTIAL,Offices,construct_connect
+sub_category,RESIDENTIAL,Government - Misc. Bldgs.,construct_connect
+sub_category,RESIDENTIAL,Government Offices,construct_connect
+sub_category,RESIDENTIAL,"Clubs, Community Centers",construct_connect
+sub_category,RESIDENTIAL,Religious Auditoriums,construct_connect
+sub_category,RESIDENTIAL,Auditoriums,construct_connect
+sub_category,RESIDENTIAL,Sports Arenas/Convention Centers,construct_connect
+sub_category,RESIDENTIAL,Rental Warehouses,construct_connect
+sub_category,RESIDENTIAL,Condominiums,construct_connect
+sub_category,RESIDENTIAL,Athletic Bldgs,construct_connect
+sub_category,RESIDENTIAL,"College, University",construct_connect
+sub_category,RESIDENTIAL,Manufacturing,construct_connect
+sub_category,RESIDENTIAL,"Hospitals, Clinics, Medical Offices",construct_connect
+sub_category,RESIDENTIAL,Airport,construct_connect
+sub_category,RESIDENTIAL,"Elementary, Pre Schools",construct_connect
+sub_category,RESIDENTIAL,High Schools,construct_connect
+sub_category,RESIDENTIAL,Apartments,construct_connect
+sub_category,RESIDENTIAL,Broadcast Studios,construct_connect
+sub_category,RESIDENTIAL,Laboratories,construct_connect
+sub_category,RESIDENTIAL,Fire and Police Stations,construct_connect
+sub_category,RESIDENTIAL,Museums,construct_connect
+sub_category,RESIDENTIAL,Junior High Schools,construct_connect
+sub_category,RESIDENTIAL,"Special, Vocational Schools",construct_connect
+sub_category,RESIDENTIAL,Medical Offices,construct_connect
+sub_category,RESIDENTIAL,Warehouses,construct_connect
+sub_category,RESIDENTIAL,Courthouses,construct_connect
+sub_category,RESIDENTIAL,Dormitories,construct_connect
+sub_category,RESIDENTIAL,Libraries,construct_connect
+sub_category,RESIDENTIAL,Nursing Homes,construct_connect
+sub_category,RETAIL,Golf Course / Country Club,construct_connect
+sub_category,RETAIL,"Hospitals, Clinics, Medical Offices",construct_connect
+sub_category,RETAIL,Food Stores,construct_connect
+sub_category,RETAIL,Hotels,construct_connect
+sub_category,RETAIL,Offices,construct_connect
+sub_category,RETAIL,Bank,construct_connect
+sub_category,RETAIL,Restaurants,construct_connect
+sub_category,RETAIL,Entertainment,construct_connect
+sub_category,RETAIL,Auditoriums,construct_connect
+sub_category,RETAIL,Automotive,construct_connect
+sub_category,RETAIL,Condominiums,construct_connect
+sub_category,RETAIL,Government - Misc. Bldgs.,construct_connect
+sub_category,RETAIL,Government Offices,construct_connect
+sub_category,RETAIL,"Clubs, Community Centers",construct_connect
+sub_category,RETAIL,Museums,construct_connect
+sub_category,RETAIL,Airport,construct_connect
+sub_category,RETAIL,Retail Stores,construct_connect
+sub_category,RETAIL,"College, University",construct_connect
+sub_category,RETAIL,Apartments,construct_connect
+sub_category,RETAIL,Broadcast Studios,construct_connect
+sub_category,RETAIL,Shopping Centers,construct_connect
+sub_category,RETAIL,"Elementary, Pre Schools",construct_connect
+sub_category,RETAIL,Manufacturing,construct_connect
+sub_category,RETAIL,Warehouses,construct_connect
+sub_category,RETAIL,Military - Misc.,construct_connect
+sub_category,RETAIL,Cafeterias,construct_connect
+sub_category,RETAIL,Rental Warehouses,construct_connect
+sub_category,RETAIL,Post Offices,construct_connect
+sub_category,RETAIL,Dormitories,construct_connect
+sub_category,RETAIL,Athletic Bldgs,construct_connect
+sub_category,RETAIL,High Schools,construct_connect
+sub_category,RETAIL,Fire and Police Stations,construct_connect
+sub_category,RETAIL,Junior High Schools,construct_connect
+sub_category,RETAIL,Medical Offices,construct_connect
+sub_category,RETAIL,Laboratories,construct_connect
+sub_category,RETAIL,Libraries,construct_connect
+sub_category,RETAIL,Courthouses,construct_connect
+sub_category,RETAIL,Religious Auditoriums,construct_connect
+sub_category,RETAIL,Sports Arenas/Convention Centers,construct_connect
+sub_category,RETAIL,Nursing Homes,construct_connect

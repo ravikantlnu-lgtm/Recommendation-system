@@ -1,0 +1,397 @@
+main:
+    params: [input]
+    steps:
+        - logEvent:
+            call: sys.log
+            args:
+                text: ${input}
+        - decoded_message:
+            assign:
+            - base64_decoded: ${base64.decode(input.data.message.data)}
+            - pubsub_message: ${json.decode(base64_decoded)}
+            - event: 
+                    data : ${pubsub_message}
+        - initialize_retry_counter:
+            assign:
+                - split_xml_retry_counter: 0
+                - data_intake_retry_counter: 0
+                - send_relevent_project_retry_counter: 0
+                - search_territory_updates_retry_counter : 0
+                - deduplicate_projects_batch_retry_counter: 0
+                - max_retries: 5
+                - decoded_message: null
+                - failure_point: null
+                - cloudFunctionError: null
+        - getFileSize:
+            assign:
+                - fileSize: ${int(event.data.size)}
+                - fileName: ${event.data.name}
+                - timeCreated : ${event.data.timeCreated}
+                - bucket : ${event.data.bucket}
+            next : checkFileName
+        # Check if name starts with 'delta/'
+        - checkFileName:
+            switch:
+              - condition: ${text.match_regex(fileName,"^Delta") and text.match_regex(fileName, "\\.xml$")}
+                next: routeBasedOnSize
+              - condition: ${true}
+                next: skipProcessing
+    
+        - routeBasedOnSize:
+            switch:
+                - condition: ${fileSize > 209715200}  # 200 MB in bytes
+                  next: triggerSplitLargeXMLCloudFunction
+                - condition: ${fileSize <= 209715200}
+                  next: triggerDataIntakeCloudFunction
+
+        - triggerSplitLargeXMLCloudFunction:
+            try:
+                call: http.post
+                args:
+                    url: ${"https://split-large-xml-files-882819101023.us-west1.run.app"}
+                    body:
+                        message: "Triggered by workflow"
+                        event: 
+                            name : ${fileName}
+                            timeCreated : ${timeCreated}
+                    headers:
+                        Content-Type: "application/json"
+                    auth:
+                        type: OIDC
+                    timeout: 1800
+                result: split_xml_response
+            retry: ${http.default_retry}
+            except:
+                as: cloudFunctionError
+
+        
+        - check_splitter_result:
+            switch:
+                - condition: ${cloudFunctionError != null}
+                  assign:
+                    - failure_point: "splitter_processor"
+                  next: determine_error_message
+                - condition: ${split_xml_response.body.status == "success"}
+                  next: log_splitter_result
+                - condition: ${split_xml_response.body.status == "failed" and split_xml_retry_counter < max_retries}
+                  next: retry_splitter_processor
+                - condition: ${split_xml_response.body.status == "failed"}
+                  assign:
+                    - failure_point: "splitter_processor"
+                  next: determine_error_message
+
+        - retry_splitter_processor:
+            assign:
+            - split_xml_retry_counter: ${split_xml_retry_counter + 1}
+            next: wait_before_retry_splitter
+        
+        - wait_before_retry_splitter:
+            call: sys.sleep
+            args:
+                seconds: ${2 * split_xml_retry_counter}  
+            next: triggerSplitLargeXMLCloudFunction  
+        
+        - log_splitter_result:
+            call: sys.log
+            args:
+                text: ${"SplitLargeXMLCF output:" + json.encode_to_string(split_xml_response)}
+                severity: INFO
+            next: triggerSearchTerritoryUpdatesCloudFunction
+
+        - triggerDataIntakeCloudFunction:
+            try:
+                call: http.post
+                args:
+                    url: ${"https://process-xml-files-882819101023.us-west1.run.app"}
+                    body:
+                        message: "Triggered by workflow"
+                        event: 
+                            name : ${fileName}
+                            timeCreated : ${timeCreated}
+                            bucket : ${bucket}
+                    headers:
+                        Content-Type: "application/json"
+                    auth:
+                        type: OIDC
+                    timeout: 1800
+                result: data_intake_response
+            retry: ${http.default_retry}
+            except:
+                as: cloudFunctionError
+        
+        - check_data_intake_result:
+            switch:
+                - condition: ${cloudFunctionError != null}
+                  assign:
+                    - failure_point: "data_intake_processor"
+                  next: determine_error_message
+                - condition: ${data_intake_response.body.status == "success"}
+                  next: log_data_intake_result
+                - condition: ${data_intake_response.body.status == "failed" and data_intake_retry_counter < max_retries}
+                  next: retry_data_intake_processor
+                - condition: ${data_intake_response.body.status == "failed"}
+                  assign:
+                    - failure_point: "data_intake_processor"
+                  next: determine_error_message
+
+        - retry_data_intake_processor:
+            assign:
+            - data_intake_retry_counter: ${data_intake_retry_counter + 1}
+            next: wait_before_retry_data_intake
+        
+        - wait_before_retry_data_intake:
+            call: sys.sleep
+            args:
+                seconds: ${2 * data_intake_retry_counter}  
+            next: triggerDataIntakeCloudFunction  
+        
+        - log_data_intake_result:
+            call: sys.log
+            args:
+                text: ${"data_intake_CF output:" + json.encode_to_string(data_intake_response)}
+                severity: INFO
+
+        - triggerSearchTerritoryUpdatesCloudFunction:
+            try:
+                call: http.post
+                args:
+                    url: ${"https://search-territory-updates-882819101023.us-west1.run.app"}
+                    body:
+                        message: "Triggered by workflow"
+                        event: 
+                            name : ${fileName}
+                            timeCreated : ${timeCreated}
+                    headers:
+                        Content-Type: "application/json"
+                    auth:
+                        type: OIDC
+                    timeout: 1800
+                result: search_territory_updates_response
+            retry: ${http.default_retry}
+            except:
+                as: cloudFunctionError
+        
+        - check_search_territory_updates_result:
+            switch:
+                - condition: ${cloudFunctionError != null}
+                  assign:
+                    - failure_point: "search_territory_updates_processor"
+                  next: determine_error_message
+                - condition: ${search_territory_updates_response.body.status == "success"}
+                  next: log_search_territory_updates_result
+                - condition: ${search_territory_updates_response.body.status == "failed" and search_territory_updates_retry_counter < max_retries}
+                  next: retry_search_territory_updates_processor
+                - condition: ${search_territory_updates_response.body.status == "failed"}
+                  assign:
+                    - failure_point: "search_territory_updates_processor"
+                  next: determine_error_message
+
+        - retry_search_territory_updates_processor:
+            assign:
+            - search_territory_updates_retry_counter: ${search_territory_updates_retry_counter + 1}
+            next: wait_before_retry_search_territory_updates
+        
+        - wait_before_retry_search_territory_updates:
+            call: sys.sleep
+            args:
+                seconds: ${2 * search_territory_updates_retry_counter}  
+            next: triggerSearchTerritoryUpdatesCloudFunction  
+        
+        - log_search_territory_updates_result:
+            call: sys.log
+            args:
+                text: ${"search_territory_updates_CF output:" + json.encode_to_string(search_territory_updates_response)}
+                severity: INFO
+  
+        - triggerSendReleventProjectToQueueCloudFunction:
+            try:
+                call: http.post
+                args:
+                    url: ${"https://send-relevent-project-to-queue-882819101023.us-west1.run.app"}
+                    body:
+                        message: "Triggered by workflow"
+                        event: 
+                            name : ${fileName}
+                            timeCreated : ${timeCreated}
+                            new_or_modified_searchs : ${search_territory_updates_response.body.new_or_modified_searchs}
+                            bucket : ${bucket}
+                    headers:
+                        Content-Type: "application/json"
+                    auth:
+                        type: OIDC
+                    timeout: 1800
+                result: send_relevent_project_response
+            retry: ${http.default_retry}
+            except:
+                as: cloudFunctionError
+        
+        - check_send_relevent_project_result:
+            switch:
+                - condition: ${cloudFunctionError != null}
+                  assign:
+                    - failure_point: "send_relevent_project_processor"
+                  next: determine_error_message
+                - condition: ${send_relevent_project_response.body.status == "success"}
+                  next: log_send_relevent_project_result
+                - condition: ${send_relevent_project_response.body.status == "failed" and send_relevent_project_retry_counter < max_retries}
+                  next: retry_send_relevent_project_processor
+                - condition: ${send_relevent_project_response.body.status == "failed"}
+                  assign:
+                    - failure_point: "send_relevent_project_processor"
+                  next: determine_error_message
+
+        - retry_send_relevent_project_processor:
+            assign:
+            - send_relevent_project_retry_counter: ${send_relevent_project_retry_counter + 1}
+            next: wait_before_retry_send_relevent_project
+        
+        - wait_before_retry_send_relevent_project:
+            call: sys.sleep
+            args:
+                seconds: ${2 * send_relevent_project_retry_counter}  
+            next: triggerSendReleventProjectToQueueCloudFunction  
+        
+        - log_send_relevent_project_result:
+            call: sys.log
+            args:
+                text: ${"send_relevent_project_CF output:" + json.encode_to_string(send_relevent_project_response)}
+                severity: INFO
+            
+
+        - triggerDeduplicateProjectsBatchCloudFunction:
+            try:
+                call: http.post
+                args:
+                    url: ${"https://deduplicate-projects-batch-882819101023.us-west1.run.app"}
+                    body:
+                        message: "Triggered by workflow"
+                        event: 
+                            name : ${fileName}
+                            timeCreated : ${timeCreated}
+                            bucket : ${bucket}
+                            batch_id : ${send_relevent_project_response.body.batch_id}
+                    headers:
+                        Content-Type: "application/json"
+                    auth:
+                        type: OIDC
+                    timeout: 1800
+                result: deduplicate_projects_batch_response
+            retry: ${http.default_retry}
+            except:
+                as: cloudFunctionError
+        
+        - check_sdeduplicate_projects_batch_result:
+            switch:
+                - condition: ${cloudFunctionError != null}
+                  assign:
+                    - failure_point: "deduplicate_projects_batch_processor"
+                  next: determine_error_message
+                - condition: ${deduplicate_projects_batch_response.body.status == "success"}
+                  next: log_deduplicate_projects_batch_result
+                - condition: ${deduplicate_projects_batch_response.body.status == "failed" and deduplicate_projects_batch_retry_counter < max_retries}
+                  next: retry_deduplicate_projects_batch_processor
+                - condition: ${deduplicate_projects_batch_response.body.status == "failed"}
+                  assign:
+                    - failure_point: "deduplicate_projects_batch_processor"
+                  next: determine_error_message
+
+        - retry_deduplicate_projects_batch_processor:
+            assign:
+            - deduplicate_projects_batch_retry_counter: ${deduplicate_projects_batch_retry_counter + 1}
+            next: wait_deduplicate_projects_batch
+        
+        - wait_deduplicate_projects_batch:
+            call: sys.sleep
+            args:
+                seconds: ${2 * deduplicate_projects_batch_retry_counter}  
+            next: triggerDeduplicateProjectsBatchCloudFunction  
+        
+        - log_deduplicate_projects_batch_result:
+            call: sys.log
+            args:
+                text: ${"deduplicate_projects_batch_CF output:" + json.encode_to_string(deduplicate_projects_batch_response)}
+                severity: INFO
+            next : success
+
+       
+        # Skip processing if name doesn't start with 'delta/'
+        - skipProcessing:
+            call: sys.log
+            args:
+                text: "File name does not start with 'delta', skipping processing."
+            next : success
+
+        - success:
+            return:
+                message: "Workflow completed successfully"
+                
+
+        - determine_error_message:
+            switch:
+            - condition: ${cloudFunctionError != null}
+              assign:
+                - error_message: ${cloudFunctionError.message}
+                - error_type : ${"http"}
+              next: fail_workflow
+            - condition: ${failure_point == "splitter_processor"}
+              assign:
+                - error_message: ${split_xml_response.body}
+                - error_type : ${split_xml_response.body.error_type}
+              next: fail_workflow
+            - condition: ${failure_point == "data_intake_processor"}
+              assign:
+                - error_message: ${data_intake_response.body}
+                - error_type : ${data_intake_response.body.error_type}
+              next: fail_workflow
+            - condition: ${failure_point == "search_territory_updates_processor"}
+              assign:
+                - error_message: ${search_territory_updates_response.body}
+                - error_type : ${search_territory_updates_response.body.error_type}
+              next: fail_workflow
+            - condition: ${failure_point == "send_relevent_project_processor"}
+              assign:
+                - error_message: ${send_relevent_project_response.body}
+                - error_type : ${send_relevent_project_response.body.error_type}
+              next: fail_workflow
+            - condition: ${failure_point == "deduplicate_projects_batch_processor"}
+              assign:
+                - error_message: ${deduplicate_projects_batch_response.body}
+                - error_type : ${deduplicate_projects_batch_response.body.error_type}
+              next: fail_workflow
+
+        - fail_workflow :
+            steps:
+                - call_failure_endpoint: 
+                    try:
+                        call: http.post
+                        args:
+                            url: ${"https://workflow-failure-882819101023.us-west1.run.app"}
+                            body:
+                                event: 
+                                    workflow_name : ${"Cloud Functions Workflow"}
+                                    failure_point : ${failure_point}
+                                    error_type :    ${error_type}
+                                    error_message : ${error_message}
+                                    input_data :    ${event.data}
+                                    
+
+                                message: "Triggered by workflow"
+                            headers:
+                                Content-Type: "application/json"
+                            auth:
+                                type: OIDC
+                            timeout: 1800
+                        result: failure_endpoint_result
+                    retry: ${http.default_retry}
+
+                - log_failure_endpoint_result:
+                    call: sys.log
+                    args:
+                        text: ${"failure-endpoint output:" + json.encode_to_string(failure_endpoint_result)}
+                        severity: ERROR
+
+                - return_failure:
+                    return:
+                        message: "Workflow failed"
+                        error: ${error_message}
+            

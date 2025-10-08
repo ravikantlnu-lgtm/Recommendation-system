@@ -1,0 +1,112 @@
+# PIPELINE DEFINITION
+# Name: ingest-data
+# Inputs:
+#    bucket: str
+#    location: str
+#    project_id: str
+# Outputs:
+#    dataset: system.Dataset
+#    filters_dataset: system.Dataset
+components:
+  comp-ingest-data:
+    executorLabel: exec-ingest-data
+    inputDefinitions:
+      parameters:
+        bucket:
+          parameterType: STRING
+        location:
+          parameterType: STRING
+        project_id:
+          parameterType: STRING
+    outputDefinitions:
+      artifacts:
+        dataset:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+        filters_dataset:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+deploymentSpec:
+  executors:
+    exec-ingest-data:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - ingest_data
+        command:
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          _KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef ingest_data(project_id: str, \n                location: str,\n\
+          \                bucket: str, \n                dataset: Output[Dataset],\
+          \ \n                filters_dataset: Output[Dataset]\n                ):\
+          \ \n\n    import logging\n    from utils import setup_logging, init_vertex\n\
+          \    import pandas as pd\n\n    setup_logging()\n    init_vertex(project_id,\
+          \ location)\n\n    logging.info(\"Reading data from GCS...\")\n    # Placeholder\
+          \ for data ingestion logic\n    df = pd.read_csv(f\"gs://{bucket}/tuning_pipeline/data/labeled_df_relevance.csv\"\
+          )\n    df.to_csv(dataset.path, index = True)\n\n    filters_df = pd.read_csv(f\"\
+          gs://{bucket}/data/boolean_filters_latest.csv\")\n    filters_df.to_csv(filters_dataset.path,\
+          \ index = True)\n\n    return\n\n"
+        image: us-central1-docker.pkg.dev/proj-sales-recommender-dev/model-tuning/components:latest
+pipelineInfo:
+  name: ingest-data
+root:
+  dag:
+    outputs:
+      artifacts:
+        dataset:
+          artifactSelectors:
+          - outputArtifactKey: dataset
+            producerSubtask: ingest-data
+        filters_dataset:
+          artifactSelectors:
+          - outputArtifactKey: filters_dataset
+            producerSubtask: ingest-data
+    tasks:
+      ingest-data:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-ingest-data
+        inputs:
+          parameters:
+            bucket:
+              componentInputParameter: bucket
+            location:
+              componentInputParameter: location
+            project_id:
+              componentInputParameter: project_id
+        taskInfo:
+          name: ingest-data
+  inputDefinitions:
+    parameters:
+      bucket:
+        parameterType: STRING
+      location:
+        parameterType: STRING
+      project_id:
+        parameterType: STRING
+  outputDefinitions:
+    artifacts:
+      dataset:
+        artifactType:
+          schemaTitle: system.Dataset
+          schemaVersion: 0.0.1
+      filters_dataset:
+        artifactType:
+          schemaTitle: system.Dataset
+          schemaVersion: 0.0.1
+schemaVersion: 2.1.0
+sdkVersion: kfp-2.10.0

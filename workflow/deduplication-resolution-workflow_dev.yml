@@ -1,0 +1,144 @@
+main:
+    params: [input]
+    steps:
+        - loginput:
+            call: sys.log
+            args:
+                data: ${input}
+        - initialize_retry_counter:
+            assign:
+                - resolve_potential_duplicates_counter: 0
+                - max_retries: 5
+                - failure_point: null
+                - cloudFunctionError: null
+        - validateInput:
+            switch:
+                - condition: ${not("batch_id" in input.data) or not("bucket" in input.data) or not("distance" in input.data) or not("name" in input.data) or not("project_1" in input.data) or not("project_1_source" in input.data) or not("project_2" in input.data) or not("project_2_source" in input.data) or not("timeCreated" in input.data)}
+                  assign:
+                    - failure_point: "validateInput"
+                  next: determine_error_message               
+        - assignInputData:
+            assign:
+                - batch_id: ${input.data.batch_id}
+                - bucket: ${input.data.bucket}
+                - distance : ${input.data.distance}
+                - name : ${input.data.name}
+                - project_1 : ${input.data.project_1}
+                - project_1_source : ${input.data.project_1_source}
+                - project_2 : ${input.data.project_2}
+                - project_2_source : ${input.data.project_2_source}
+                - timeCreated : ${input.data.timeCreated}
+              
+
+        - triggerResolvePotentialDuplicatesCloudFunction:
+            try:
+                call: http.post
+                args:
+                    url: ${"https://resolve-potential-duplicates-195063057478.us-west1.run.app"}
+                    body:
+                        message: "Triggered by workflow"
+                        batch_id : ${batch_id}
+                        bucket : ${bucket}
+                        distance : ${distance}
+                        name : ${name}
+                        project_1 : ${project_1}
+                        project_1_source : ${project_1_source}
+                        project_2 : ${project_2}
+                        project_2_source : ${project_2_source}
+                        timeCreated : ${timeCreated}
+                    headers:
+                        Content-Type: "application/json"
+                    auth:
+                        type: OIDC
+                    timeout: 1800
+                result: resolve_potential_duplicates_response
+            retry: ${http.default_retry}
+            except:
+                as: cloudFunctionError
+
+        - check_resolve_potential_duplicates_result:
+            switch:
+                - condition: ${cloudFunctionError != null}
+                  assign:
+                    - failure_point: "resolve_potential_duplicates_processor"
+                  next: determine_error_message
+                - condition: ${resolve_potential_duplicates_response.body.status == "success"}
+                  next: success
+                - condition: ${resolve_potential_duplicates_response.body.status == "failed" and resolve_potential_duplicates_counter < max_retries}
+                  next: retry_resolve_potential_duplicates_processor
+                - condition: ${resolve_potential_duplicates_response.body.status == "failed"}
+                  assign:
+                    - failure_point: "resolve_potential_duplicates_processor"
+                  next: determine_error_message
+
+        - retry_resolve_potential_duplicates_processor:
+            assign:
+                - resolve_potential_duplicates_counter: ${resolve_potential_duplicates_counter + 1}
+            next: wait_before_retry_resolve_potential_duplicates
+
+        - wait_before_retry_resolve_potential_duplicates:
+            call: sys.sleep
+            args:
+                seconds: ${2 * resolve_potential_duplicates_counter}
+            next: triggerResolvePotentialDuplicatesCloudFunction
+
+        - log_resolve_potential_duplicates_result:
+            call: sys.log
+            args:
+                text: ${"resolve_potential_duplicates_CF output:" + json.encode_to_string(resolve_potential_duplicates_response)}
+                severity: INFO
+        
+        - success:
+            return:
+                message: "Workflow completed successfully"
+                
+
+        - determine_error_message:
+            switch:
+            - condition: ${cloudFunctionError != null}
+              assign:
+                - error_message: ${cloudFunctionError.message}
+                - error_type : ${"http"}
+              next: fail_workflow
+            - condition: ${failure_point == "resolve_potential_duplicates_processor"}
+              assign:
+                - error_message: ${resolve_potential_duplicates_response.body}
+                - error_type : ${resolve_potential_duplicates_response.body.error_type}
+              next: fail_workflow
+            
+
+        - fail_workflow :
+            steps:
+                - call_failure_endpoint: 
+                    try:
+                        call: http.post
+                        args:
+                            url: ${"https://workflow-failure-195063057478.us-west1.run.app"}
+                            body:
+                                event: 
+                                    workflow_name : ${"Cloud Functions Workflow"}
+                                    failure_point : ${failure_point}
+                                    error_type :    ${error_type}
+                                    error_message : ${error_message}
+                                    input_data :    ${input.data}
+                                    
+
+                                message: "Triggered by workflow"
+                            headers:
+                                Content-Type: "application/json"
+                            auth:
+                                type: OIDC
+                            timeout: 1800
+                        result: failure_endpoint_result
+                    retry: ${http.default_retry}
+
+                - log_failure_endpoint_result:
+                    call: sys.log
+                    args:
+                        text: ${"failure-endpoint output:" + json.encode_to_string(failure_endpoint_result)}
+                        severity: ERROR
+
+                - return_failure:
+                    return:
+                        message: "Workflow failed"
+                        error: ${error_message}

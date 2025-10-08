@@ -1,0 +1,259 @@
+# PIPELINE DEFINITION
+# Name: evaluate-model
+# Inputs:
+#    X_test: system.Dataset
+#    base_model: str
+#    bucket: str
+#    id_col: str
+#    labels: list
+#    location: str
+#    project_id: str
+#    prompt: str
+#    prompt_type: str
+#    query_col: str
+#    response_col: str
+#    search_col: str
+#    tuned_model_endpoint: str
+#    y_test: system.Dataset
+# Outputs:
+#    base_model: str
+#    f1_scores: dict
+#    tuned_model_endpoint: str
+components:
+  comp-evaluate-model:
+    executorLabel: exec-evaluate-model
+    inputDefinitions:
+      artifacts:
+        X_test:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+        y_test:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+      parameters:
+        base_model:
+          parameterType: STRING
+        bucket:
+          parameterType: STRING
+        id_col:
+          parameterType: STRING
+        labels:
+          parameterType: LIST
+        location:
+          parameterType: STRING
+        project_id:
+          parameterType: STRING
+        prompt:
+          parameterType: STRING
+        prompt_type:
+          parameterType: STRING
+        query_col:
+          parameterType: STRING
+        response_col:
+          parameterType: STRING
+        search_col:
+          parameterType: STRING
+        tuned_model_endpoint:
+          parameterType: STRING
+    outputDefinitions:
+      parameters:
+        base_model:
+          parameterType: STRING
+        f1_scores:
+          parameterType: STRUCT
+        tuned_model_endpoint:
+          parameterType: STRING
+deploymentSpec:
+  executors:
+    exec-evaluate-model:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - evaluate_model
+        command:
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          _KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef evaluate_model(project_id: str, \n                location: str,\n\
+          \                bucket: str,\n                base_model: str,\n      \
+          \          tuned_model_endpoint: str, \n                X_test: Input[Dataset],\
+          \ \n                y_test: Input[Dataset], \n                prompt: str,\
+          \ \n                id_col: str,\n                search_col: str, \n  \
+          \              query_col: str, \n                response_col: str, \n \
+          \               prompt_type: str, \n                labels: List[str]) ->\
+          \ NamedTuple('outputs', [('f1_scores', dict), ('base_model', str), ('tuned_model_endpoint',\
+          \ str)]):\n\n    from tqdm import tqdm\n    import json \n    import logging\n\
+          \    import pandas as pd \n    from vertexai.generative_models import GenerativeModel,\
+          \ GenerationConfig\n    from sklearn.preprocessing import OrdinalEncoder\
+          \ \n    from sklearn.metrics import f1_score\n    from utils import row_to_content_parts,\
+          \ row_to_embedded_prompt\n\n    def strip_json(output, response_col):\n\
+          \        try: \n            output = output.replace(\"```json\", \"\").replace(\"\
+          ```\", \"\").replace(\"[\", \"\").replace(\"]\", \"\").strip() \n      \
+          \      output_json = json.loads(output)\n            return output_json[response_col]\n\
+          \        except Exception as e: \n            logging.info(f\"Error stripping\
+          \ JSON: {e}\")\n\n    with open(X_test.path, 'r') as f:\n        X_test\
+          \ = pd.read_csv(f)\n\n    with open(y_test.path, 'r') as f:\n        y_test\
+          \ = pd.read_csv(f)\n\n    X_test_formatted = []\n\n    logging.info(\"Formatting\
+          \ test data for evaluation...\")\n    for _, row in X_test.iterrows(): \n\
+          \        try: \n\n            if prompt_type == 'parts': \n            \
+          \    parts = row_to_content_parts(row = row, \n                        \
+          \                    prompt = prompt, \n                               \
+          \             search_col = search_col, \n                              \
+          \              query_col = query_col) \n\n            elif prompt_type ==\
+          \ 'embedded':\n                parts = row_to_embedded_prompt(row=row, \n\
+          \                                                prompt = prompt, \n   \
+          \                                             search_col = search_col, \n\
+          \                                                query_col = query_col)\n\
+          \n            content_row = {\"contents\": []}\n            for part in\
+          \ parts:\n                content_row[\"contents\"].append(part['text'])\n\
+          \n            # Add record to formatted training data\n            X_test_formatted.append(content_row)\n\
+          \        except Exception as e:\n            logging.error(f\"Error formatting\
+          \ input data: {e}\")\n            continue \n\n    predictions_tuned = []\
+          \ \n    predictions_base = []\n\n    response_schema = {\n        \"type\"\
+          : \"OBJECT\",\n        \"properties\": {\n            id_col: {\"type\"\
+          : \"STRING\"}, \n            response_col: {\"type\": \"STRING\", \n   \
+          \                         \"enum\": labels}  # Use the provided labels for\
+          \ the response column\n        }\n    }\n\n    config = GenerationConfig(response_schema=response_schema,\
+          \ response_mime_type=\"application/json\")\n    tuned_model = GenerativeModel(tuned_model_endpoint)\n\
+          \    baseline_model = GenerativeModel(base_model)\n\n    logging.info(\"\
+          Generating predictions for test data...\")\n    for item in tqdm(X_test_formatted):\
+          \ \n\n        # Generate content using the tuned and base\n        tuned_response\
+          \ = tuned_model.generate_content(contents=item[\"contents\"], generation_config=config)\n\
+          \        base_response = baseline_model.generate_content(contents=item[\"\
+          contents\"], generation_config=config)\n\n        predictions_tuned.append(tuned_response.text)\n\
+          \        predictions_base.append(base_response.text)\n\n\n    cleaned_predictions_tuned\
+          \ = [strip_json(output, response_col) for output in predictions_tuned]\n\
+          \    cleaned_predictions_base = [strip_json(output, response_col) for output\
+          \ in predictions_base]\n\n    predictions_df = y_test.copy() \n    predictions_df[f\"\
+          {response_col}_tuned\"] = cleaned_predictions_tuned\n    predictions_df[f\"\
+          {response_col}_base\"] = cleaned_predictions_base\n\n    logging.info(predictions_df[response_col].value_counts())\n\
+          \    logging.info(predictions_df[f\"{response_col}_tuned\"].value_counts())\n\
+          \    logging.info(predictions_df[f\"{response_col}_base\"].value_counts())\n\
+          \n    # Encode the relevance columns\n    logging.info(\"Encoding relevance\
+          \ columns...\")\n    relevance_columns = predictions_df.filter(regex=response_col).columns\n\
+          \n    encoder = OrdinalEncoder(categories=[labels], handle_unknown='use_encoded_value',\
+          \ unknown_value=-1)\n    for col in relevance_columns: \n        predictions_df[col]\
+          \ = predictions_df[col].astype(str).str.lower()\n        predictions_df[col]\
+          \ = encoder.fit_transform(predictions_df[[col]])\n\n    logging.info(f\"\
+          Predictions DataFrame:\\n{predictions_df.head()}\")\n    f1_scores = {}\n\
+          \n    for col in relevance_columns: \n        f1 = f1_score(predictions_df[response_col],\
+          \ predictions_df[col], average='weighted')\n        f1_scores[col] = f1\n\
+          \n    logging.info(f\"F1 Scores: {f1_scores}\")\n\n    outputs = NamedTuple('outputs',\
+          \ [('f1_scores', dict), ('base_model', str), ('tuned_model_endpoint', str)])\n\
+          \n    return outputs(f1_scores=f1_scores, base_model=base_model, tuned_model_endpoint=tuned_model_endpoint)\n\
+          \n"
+        image: us-central1-docker.pkg.dev/proj-sales-recommender-dev/model-tuning/components:latest
+pipelineInfo:
+  name: evaluate-model
+root:
+  dag:
+    outputs:
+      parameters:
+        base_model:
+          valueFromParameter:
+            outputParameterKey: base_model
+            producerSubtask: evaluate-model
+        f1_scores:
+          valueFromParameter:
+            outputParameterKey: f1_scores
+            producerSubtask: evaluate-model
+        tuned_model_endpoint:
+          valueFromParameter:
+            outputParameterKey: tuned_model_endpoint
+            producerSubtask: evaluate-model
+    tasks:
+      evaluate-model:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-evaluate-model
+        inputs:
+          artifacts:
+            X_test:
+              componentInputArtifact: X_test
+            y_test:
+              componentInputArtifact: y_test
+          parameters:
+            base_model:
+              componentInputParameter: base_model
+            bucket:
+              componentInputParameter: bucket
+            id_col:
+              componentInputParameter: id_col
+            labels:
+              componentInputParameter: labels
+            location:
+              componentInputParameter: location
+            project_id:
+              componentInputParameter: project_id
+            prompt:
+              componentInputParameter: prompt
+            prompt_type:
+              componentInputParameter: prompt_type
+            query_col:
+              componentInputParameter: query_col
+            response_col:
+              componentInputParameter: response_col
+            search_col:
+              componentInputParameter: search_col
+            tuned_model_endpoint:
+              componentInputParameter: tuned_model_endpoint
+        taskInfo:
+          name: evaluate-model
+  inputDefinitions:
+    artifacts:
+      X_test:
+        artifactType:
+          schemaTitle: system.Dataset
+          schemaVersion: 0.0.1
+      y_test:
+        artifactType:
+          schemaTitle: system.Dataset
+          schemaVersion: 0.0.1
+    parameters:
+      base_model:
+        parameterType: STRING
+      bucket:
+        parameterType: STRING
+      id_col:
+        parameterType: STRING
+      labels:
+        parameterType: LIST
+      location:
+        parameterType: STRING
+      project_id:
+        parameterType: STRING
+      prompt:
+        parameterType: STRING
+      prompt_type:
+        parameterType: STRING
+      query_col:
+        parameterType: STRING
+      response_col:
+        parameterType: STRING
+      search_col:
+        parameterType: STRING
+      tuned_model_endpoint:
+        parameterType: STRING
+  outputDefinitions:
+    parameters:
+      base_model:
+        parameterType: STRING
+      f1_scores:
+        parameterType: STRUCT
+      tuned_model_endpoint:
+        parameterType: STRING
+schemaVersion: 2.1.0
+sdkVersion: kfp-2.10.0

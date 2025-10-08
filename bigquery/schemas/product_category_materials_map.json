@@ -1,0 +1,37 @@
+[
+  {
+    "name": "fbm_productcatcode", 
+    "mode": "REQUIRED",
+    "type": "STRING",
+    "description": "Product category code",
+    "fields": []
+  },
+ {
+        "name": "product_category_name",
+        "mode": "",
+        "type": "STRING",
+        "description": "Category name",
+        "fields": []
+  },
+ {
+    "name": "division",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "Material division",
+    "fields": []
+  },
+  {
+    "name": "material",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "Material name",
+    "fields": []
+  },
+  {
+    "name": "code",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "Material code",
+    "fields": []
+  }
+]

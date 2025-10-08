@@ -1,0 +1,23 @@
+[
+    {
+      "name": "fbm_searchid",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "Search ID",
+      "fields": []
+    },
+    {
+      "name": "fbm_productcategoryid",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "CRM Unique Product Category ID",
+      "fields": []
+    },
+    {
+      "name": "fbm_productcatcode",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "Product Category Code",
+      "fields": []
+    }
+  ]

@@ -1,0 +1,128 @@
+# PIPELINE DEFINITION
+# Name: tune-model
+# Inputs:
+#    base_model: str [Default: 'gemini-2.0-flash-001']
+#    bucket: str
+#    dataset_uri: str
+#    epochs: int [Default: 5.0]
+#    model_display_name: str
+#    project_id: str
+# Outputs:
+#    Output: str
+components:
+  comp-tune-model:
+    executorLabel: exec-tune-model
+    inputDefinitions:
+      parameters:
+        base_model:
+          defaultValue: gemini-2.0-flash-001
+          isOptional: true
+          parameterType: STRING
+        bucket:
+          parameterType: STRING
+        dataset_uri:
+          parameterType: STRING
+        epochs:
+          defaultValue: 5.0
+          isOptional: true
+          parameterType: NUMBER_INTEGER
+        model_display_name:
+          parameterType: STRING
+        project_id:
+          parameterType: STRING
+    outputDefinitions:
+      parameters:
+        Output:
+          parameterType: STRING
+deploymentSpec:
+  executors:
+    exec-tune-model:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - tune_model
+        command:
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          _KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef tune_model(project_id: str, \n               bucket: str, \n\
+          \               dataset_uri: str, \n               model_display_name: str,\
+          \ \n               base_model: str = \"gemini-2.0-flash-001\", \n      \
+          \         epochs: int = 5,\n               ) -> str: \n\n    from vertexai.tuning\
+          \ import sft \n    import time\n    import logging \n\n    logging.info(\"\
+          Starting tuning job...\")\n    sft_tuning_job = sft.train( \n        source_model\
+          \ = base_model, \n        train_dataset = dataset_uri,\n        tuned_model_display_name=model_display_name,\n\
+          \        epochs = epochs \n    )\n\n    while not sft_tuning_job.has_ended:\
+          \ \n        logging.info(f\"Waiting for tuning job to complete...\")\n \
+          \       time.sleep(120)\n        sft_tuning_job.refresh()\n\n    tuned_model_endpoint\
+          \ = sft_tuning_job.tuned_model_endpoint_name\n    logging.info(f\"Tuning\
+          \ job completed. Model name: {sft_tuning_job.tuned_model_name}\")\n    logging.info(f\"\
+          Model endpoint: {tuned_model_endpoint}\")\n\n    return tuned_model_endpoint\n\
+          \n"
+        image: us-central1-docker.pkg.dev/proj-sales-recommender-dev/model-tuning/components:latest
+pipelineInfo:
+  name: tune-model
+root:
+  dag:
+    outputs:
+      parameters:
+        Output:
+          valueFromParameter:
+            outputParameterKey: Output
+            producerSubtask: tune-model
+    tasks:
+      tune-model:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-tune-model
+        inputs:
+          parameters:
+            base_model:
+              componentInputParameter: base_model
+            bucket:
+              componentInputParameter: bucket
+            dataset_uri:
+              componentInputParameter: dataset_uri
+            epochs:
+              componentInputParameter: epochs
+            model_display_name:
+              componentInputParameter: model_display_name
+            project_id:
+              componentInputParameter: project_id
+        taskInfo:
+          name: tune-model
+  inputDefinitions:
+    parameters:
+      base_model:
+        defaultValue: gemini-2.0-flash-001
+        isOptional: true
+        parameterType: STRING
+      bucket:
+        parameterType: STRING
+      dataset_uri:
+        parameterType: STRING
+      epochs:
+        defaultValue: 5.0
+        isOptional: true
+        parameterType: NUMBER_INTEGER
+      model_display_name:
+        parameterType: STRING
+      project_id:
+        parameterType: STRING
+  outputDefinitions:
+    parameters:
+      Output:
+        parameterType: STRING
+schemaVersion: 2.1.0
+sdkVersion: kfp-2.10.0

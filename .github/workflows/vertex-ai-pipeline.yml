@@ -1,0 +1,63 @@
+name: 'Manual Vertex-ai pipeline creation'
+
+on:
+  workflow_dispatch: 
+    inputs:
+      environment:
+        description: 'Select environment (dev or prod)'
+        required: true
+        type: choice
+        options:
+          - dev
+          - prod
+
+jobs:
+  run-vertex-ai-scripts:
+    name: 'Run Vertex-ai pipelines script'
+    runs-on: ubuntu-24.04
+    environment: ${{ github.event.inputs.environment }}
+    defaults:
+      run:
+        working-directory: TuningPipeline
+
+    steps:
+      - name: 'Checkout Code'
+        uses: actions/checkout@v2
+
+      # Authenticate to Google Cloud
+      - name: 'Authenticate to Google Cloud'
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+      # Set up Google Cloud SDK
+      - name: 'Set up Google Cloud SDK'
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+
+      # Set up Python 3.9
+      - name: 'Set up Python 3.9'
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: 'Installation of requirements'
+        run: |
+          pip install --no-cache-dir -r requirements.txt
+        
+
+      - name: Set environment variable
+        run: |
+          echo "ENV_FILE=.env.$(echo '${{ github.event.inputs.environment }}' | tr '[:lower:]' '[:upper:]')" >> "$GITHUB_ENV"
+
+
+      - name: 'Run Vertex AI Pipeline Creation Script'
+        run: |
+          if [ "${{ github.event.inputs.environment }}" == "dev" ]; then
+            chmod +x run_tuning_pipeline_dev.sh
+            ./run_tuning_pipeline_dev.sh
+          elif [ "${{ github.event.inputs.environment }}" == "prod" ]; then
+            chmod +x run_tuning_pipeline_prod.sh
+            ./run_tuning_pipeline_prod.sh
+          fi

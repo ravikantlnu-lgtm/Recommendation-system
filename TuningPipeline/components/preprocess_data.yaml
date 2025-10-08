@@ -1,0 +1,176 @@
+# PIPELINE DEFINITION
+# Name: preprocess-data
+# Inputs:
+#    bucket: str
+#    dataset: system.Dataset
+#    filters_dataset: system.Dataset
+#    id_col: str
+#    output_filename: str
+#    project_details_col: list
+#    project_id: str
+#    query_col: str
+#    response_col: str
+#    search_col: str
+# Outputs:
+#    Output: str
+components:
+  comp-preprocess-data:
+    executorLabel: exec-preprocess-data
+    inputDefinitions:
+      artifacts:
+        dataset:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+        filters_dataset:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+      parameters:
+        bucket:
+          parameterType: STRING
+        id_col:
+          parameterType: STRING
+        output_filename:
+          parameterType: STRING
+        project_details_col:
+          parameterType: LIST
+        project_id:
+          parameterType: STRING
+        query_col:
+          parameterType: STRING
+        response_col:
+          parameterType: STRING
+        search_col:
+          parameterType: STRING
+    outputDefinitions:
+      parameters:
+        Output:
+          parameterType: STRING
+deploymentSpec:
+  executors:
+    exec-preprocess-data:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - preprocess_data
+        command:
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          _KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef preprocess_data(project_id: str, \n                    bucket:\
+          \ str, \n                    id_col: str, \n                    search_col:\
+          \ str, \n                    query_col: str,\n                    response_col:\
+          \ str, \n                    output_filename: str,\n                   \
+          \ project_details_col: List[str],\n                    dataset: Input[Dataset],\
+          \ \n                    filters_dataset: Input[Dataset],\n             \
+          \       ) -> str:\n\n    import pandas as pd \n    import numpy as np\n\
+          \    import json\n    import logging\n    from utils import upload_file_to_gcs\n\
+          \n    def add_query_terms(row, search_col, boolean_filters):\n        product\
+          \ = row[search_col]\n        search_terms = [filter['Query'] for filter\
+          \ in boolean_filters if filter['Filter'] == product][0]\n        return\
+          \ search_terms\n\n    with open(dataset.path, 'r') as f:\n        df = pd.read_csv(f)\n\
+          \n    with open(filters_dataset.path, 'r') as file:\n        filters_df\
+          \ = pd.read_csv(file)\n\n    # Format boolean filters\n    logging.info(\"\
+          Loading boolean filters...\")\n    boolean_filters = json.loads(filters_df.to_json(orient='records'))\n\
+          \n    # Add query terms to dataframe\n    logging.info(\"Adding query terms\
+          \ to dataframe...\")\n    df[query_col] = df.apply(lambda row: add_query_terms(row=row,\
+          \ search_col=search_col, boolean_filters=boolean_filters), axis=1)\n\n \
+          \   logging.info(\"Preprocessing data...\")\n\n    # Reorder columns\n \
+          \   df = df[[id_col, search_col, query_col, response_col] + project_details_col]\n\
+          \n    # Drop rows with missing values in key columns\n    df.dropna(subset\
+          \ = [id_col, search_col, query_col, response_col], inplace=True)\n\n   \
+          \ logging.info(f\"Data preprocessing complete. df: {df.head()}\")\n\n  \
+          \  # Save preprocessed data to CSV\n    output_csv = f\"{output_filename}.csv\"\
+          \n    tmp = 'data.csv'\n    df.to_csv(tmp, index=False)\n    try:\n    \
+          \    logging.info(f\"Attempting to upload file to bucket: {bucket} with\
+          \ filename: {output_csv}\")\n        dataset_gcs_uri = upload_file_to_gcs(tmp,\
+          \ bucket, output_csv)\n        logging.info(f\"File {output_csv} successfully\
+          \ uploaded to GCS bucket {dataset_gcs_uri}\")\n    except Exception as e:\n\
+          \        logging.error(f\"Failed to upload file {output_csv} to GCS. Error:\
+          \ {str(e)}\")\n        raise\n\n    return dataset_gcs_uri\n\n"
+        image: us-central1-docker.pkg.dev/proj-sales-recommender-dev/model-tuning/components:latest
+pipelineInfo:
+  name: preprocess-data
+root:
+  dag:
+    outputs:
+      parameters:
+        Output:
+          valueFromParameter:
+            outputParameterKey: Output
+            producerSubtask: preprocess-data
+    tasks:
+      preprocess-data:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-preprocess-data
+        inputs:
+          artifacts:
+            dataset:
+              componentInputArtifact: dataset
+            filters_dataset:
+              componentInputArtifact: filters_dataset
+          parameters:
+            bucket:
+              componentInputParameter: bucket
+            id_col:
+              componentInputParameter: id_col
+            output_filename:
+              componentInputParameter: output_filename
+            project_details_col:
+              componentInputParameter: project_details_col
+            project_id:
+              componentInputParameter: project_id
+            query_col:
+              componentInputParameter: query_col
+            response_col:
+              componentInputParameter: response_col
+            search_col:
+              componentInputParameter: search_col
+        taskInfo:
+          name: preprocess-data
+  inputDefinitions:
+    artifacts:
+      dataset:
+        artifactType:
+          schemaTitle: system.Dataset
+          schemaVersion: 0.0.1
+      filters_dataset:
+        artifactType:
+          schemaTitle: system.Dataset
+          schemaVersion: 0.0.1
+    parameters:
+      bucket:
+        parameterType: STRING
+      id_col:
+        parameterType: STRING
+      output_filename:
+        parameterType: STRING
+      project_details_col:
+        parameterType: LIST
+      project_id:
+        parameterType: STRING
+      query_col:
+        parameterType: STRING
+      response_col:
+        parameterType: STRING
+      search_col:
+        parameterType: STRING
+  outputDefinitions:
+    parameters:
+      Output:
+        parameterType: STRING
+schemaVersion: 2.1.0
+sdkVersion: kfp-2.10.0

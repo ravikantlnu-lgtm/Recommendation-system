@@ -1,0 +1,58 @@
+name: 'Manual Terraform Plan and Apply'
+
+on:
+  # Manual trigger for the terraform deployment
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select environment (dev or prod)'
+        required: true
+        type: choice
+        options:
+          - dev
+          - prod
+
+          
+
+jobs:
+  terraform-deploy:
+    name: 'Terraform Plan & Apply'
+    runs-on: ubuntu-24.04
+    environment: ${{ github.event.inputs.environment }}
+    defaults:
+      run:
+        working-directory: terraform/${{ github.event.inputs.environment }}
+
+    steps:
+      - name: 'Checkout Code'
+        uses: actions/checkout@v2
+
+      # Authenticate to Google Cloud
+      - name: Authenticate to Google Cloud 
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+      # Set up Google Cloud SDK
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+
+      # Set up Terraform (latest version, specifying Terraform 1.4.0)
+      - name: 'Setup Terraform'
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.8.5
+
+      # Terraform Init
+      - name: 'Terraform Init'
+        run: terraform init
+
+      # Terraform Plan
+      - name: 'Terraform Plan'
+        run: terraform plan
+
+      # Terraform Apply with manual approval
+      - name: 'Terraform Apply'
+        run: terraform apply -auto-approve

@@ -1,0 +1,279 @@
+main:
+    params: [input]
+    steps:
+        - loginput:
+            call: sys.log
+            args:
+                data: ${input}
+        - initialize_retry_counter:
+            assign:
+                - assign_project_retry_counter: 0
+                - assign_relevance_retry_counter: 0
+                - reroute_project_retry_counter: 0
+                - max_retries: 5
+                - failure_point: null
+                - cloudFunctionError: null
+        - validateInput:
+            switch:
+                - condition: ${not("project_id" in input.data) or not("time_created" in input.data) or not("search_id" in input.data) or not("territory_id" in input.data) or not("distance_from_territory" in input.data)}
+                  assign:
+                    - failure_point: "validateInput"
+                  next: determine_error_message                 
+            next: getProjectId_SearchId
+        - getProjectId_SearchId:
+            assign:
+                - project_id: ${input.data.project_id}
+                - time_created: ${input.data.time_created}
+                - search_id : ${input.data.search_id}
+                - territory_id : ${input.data.territory_id}
+                - distance_from_territory : ${input.data.distance_from_territory}
+                - territory_idx : ${input.data.territory_idx}
+                - search_materials_json: ${input.data.search_materials_json}
+                - materials_valuation: ${input.data.materials_valuation}
+                - assign_queue : ${input.data.assign_queue}
+                - request_type : ${input.data.request_type}
+                - batch_id : ${input.data.batch_id}
+
+        - checkAssignQueue: 
+            switch:
+                - condition: ${assign_queue == "send_project_to_queue" or assign_queue == "assign_project_to_search"}
+                  next: triggerRerouteToSearchOrRelevanceQueueCloudFunction
+                - condition: ${assign_queue == "send_project_to_search_or_relevance_queue" and request_type == "send_project_to_queue"}
+                  next: triggerAssignProjectToSearchCloudFunction
+                - condition: ${assign_queue == "send_project_to_search_or_relevance_queue" and request_type == "assign_project_to_search"}
+                  next: triggerAssignRelevanceCloudFunction
+
+        - triggerRerouteToSearchOrRelevanceQueueCloudFunction:
+            try:
+                call: http.post
+                args:
+                    url: ${"https://reroute-to-search-or-relevance-queue-882819101023.us-west1.run.app"}
+                    body:
+                        message: "Triggered by workflow"
+                        project_id : ${project_id}
+                        search_id : ${search_id}
+                        territory_id : ${territory_id}
+                        time_created : ${time_created}
+                        distance_from_territory : ${distance_from_territory}
+                        search_materials_json : ${search_materials_json}
+                        materials_valuation : ${materials_valuation}
+                        assign_queue : ${assign_queue}
+                        territory_idx : ${territory_idx}
+                        batch_id : ${batch_id}
+                        
+                    headers:
+                        Content-Type: "application/json"
+                    auth:
+                        type: OIDC
+                    timeout: 1800
+                result: reroute_to_search_or_relevance_queue_response
+            retry: ${http.default_retry}
+            except:
+                as: cloudFunctionError
+
+        - check_reroute_to_search_or_relevance_queue_result:
+            switch:
+                - condition: ${cloudFunctionError != null}
+                  assign:
+                    - failure_point: "reroute_to_search_or_relevance_queue_processor"
+                  next: determine_error_message
+                - condition: ${reroute_to_search_or_relevance_queue_response.body.status == "success"}
+                  next: success
+                - condition: ${reroute_to_search_or_relevance_queue_response.body.status == "failed" and reroute_project_retry_counter < max_retries}
+                  next: retry_reroute_to_search_or_relevance_queue_processor
+                - condition: ${reroute_to_search_or_relevance_queue_response.body.status == "failed"}
+                  assign:
+                    - failure_point: "reroute_to_search_or_relevance_queue_processor"
+                  next: determine_error_message
+
+        - retry_reroute_to_search_or_relevance_queue_processor:
+            assign:
+                - reroute_project_retry_counter: ${reroute_project_retry_counter + 1}
+            next: wait_before_retry_reroute_to_search_or_relevance_queue
+
+        - wait_before_retry_reroute_to_search_or_relevance_queue:
+            call: sys.sleep
+            args:
+                seconds: ${2 * reroute_project_retry_counter}
+            next: triggerRerouteToSearchOrRelevanceQueueCloudFunction
+
+        - log_send_project_to_search_or_relevance_queue_result:
+            call: sys.log
+            args:
+                text: ${"reroute_to_search_or_relevance_queue_CF output:" + json.encode_to_string(reroute_to_search_or_relevance_queue_response)}
+                severity: INFO
+
+        - triggerAssignProjectToSearchCloudFunction:
+            try:
+                call: http.post
+                args:
+                    url: ${"https://assign-project-to-search-882819101023.us-west1.run.app"}
+                    body:
+                        message: "Triggered by workflow"
+                        project_id : ${project_id}
+                        search_id : ${search_id}
+                        territory_id : ${territory_id}
+                        time_created : ${time_created}
+                        distance_from_territory : ${distance_from_territory}
+                        search_materials_json: ${search_materials_json}
+                        batch_id : ${batch_id}
+                    headers:
+                        Content-Type: "application/json"
+                    auth:
+                        type: OIDC
+                    timeout: 1800
+                result: assign_project_response
+            retry: ${http.default_retry}
+            except:
+                as: cloudFunctionError
+
+        - check_assign_project_result:
+            switch:
+                - condition: ${cloudFunctionError != null}
+                  assign:
+                    - failure_point: "assign_project_processor"
+                  next: determine_error_message
+                - condition: ${assign_project_response.body.status == "success"}
+                  next: success
+                - condition: ${assign_project_response.body.status == "failed" and assign_project_retry_counter < max_retries}
+                  next: retry_assign_project_processor
+                - condition: ${assign_project_response.body.status == "failed"}
+                  assign:
+                    - failure_point: "assign_project_processor"
+                  next: determine_error_message
+
+        - retry_assign_project_processor:
+            assign:
+            - assign_project_retry_counter: ${assign_project_retry_counter + 1}
+            next: wait_before_retry_assign_project
+        
+        - wait_before_retry_assign_project:
+            call: sys.sleep
+            args:
+                seconds: ${2 * assign_project_retry_counter}  
+            next: triggerAssignProjectToSearchCloudFunction  
+        
+        - log_assign_project_result:
+            call: sys.log
+            args:
+                text: ${"assign_project_CF output:" + json.encode_to_string(assign_project_response)}
+                severity: INFO
+
+        - triggerAssignRelevanceCloudFunction:
+            try:
+                call: http.post
+                args:
+                    url: ${"https://assign-relevance-882819101023.us-west1.run.app"}
+                    body:
+                        message: "Triggered by workflow"
+                        match : True
+                        project_id : ${project_id}
+                        search_id : ${search_id}
+                        territory_id : ${territory_id}
+                        time_created : ${time_created}
+                        distance_from_territory : ${distance_from_territory}
+                        territory_idx : ${territory_idx}
+                        search_materials_json: ${search_materials_json}
+                        materials_valuation : ${materials_valuation}
+                        batch_id : ${batch_id}
+                    headers:
+                        Content-Type: "application/json"
+                    auth:
+                        type: OIDC
+                    timeout: 1800
+                result: assign_relevance_response
+            retry: ${http.default_retry}
+            except:
+                as: cloudFunctionError
+        
+        - check_assign_relevance_result:
+            switch:
+                - condition: ${cloudFunctionError != null}
+                  assign:
+                    - failure_point: "assign_relevance_processor"
+                  next: determine_error_message
+                - condition: ${assign_relevance_response.body.status == "success"}
+                  next: log_assign_relevance_result
+                - condition: ${assign_relevance_response.body.status == "failed" and assign_relevance_retry_counter < max_retries}
+                  next: retry_assign_relevance_processor
+                - condition: ${assign_relevance_response.body.status == "failed"}
+                  assign:
+                    - failure_point: "assign_relevance_processor"
+                  next: determine_error_message
+
+        - retry_assign_relevance_processor:
+            assign:
+            - assign_relevance_retry_counter: ${assign_relevance_retry_counter + 1}
+            next: wait_before_retry_assign_relevance
+        
+        - wait_before_retry_assign_relevance:
+            call: sys.sleep
+            args:
+                seconds: ${2 * assign_relevance_retry_counter}  
+            next: triggerAssignRelevanceCloudFunction  
+        
+        - log_assign_relevance_result:
+            call: sys.log
+            args:
+                text: ${"assign_relevance_CF output:" + json.encode_to_string(assign_relevance_response)}
+                severity: INFO
+        - success:
+            return:
+                message: "Workflow completed successfully"
+        - determine_error_message:
+            switch:
+            - condition: ${cloudFunctionError != null}
+              assign:
+                - error_message: ${cloudFunctionError.message}
+                - error_type : ${"http"}
+              next: fail_workflow
+            - condition: ${failure_point == "assign_project_processor"}
+              assign:
+                - error_message: ${assign_project_response.body}
+                - error_type : ${assign_project_response.body.error_type}
+            - condition: ${failure_point == "assign_relevance_processor"}
+              assign:
+                - error_message: ${assign_relevance_response.body}
+                - error_type : ${assign_relevance_response.body.error_type}
+            - condition: ${failure_point == "validateInput"}
+              assign:
+                - error_message: ${"Missing required input fields"}
+                - error_type : ${"validation.MissingRequiredFields"}
+              next: fail_workflow
+
+        - fail_workflow :
+            steps:
+                - call_failure_endpoint: 
+                    try:
+                        call: http.post
+                        args:
+                            url: ${"https://workflow-failure-882819101023.us-west1.run.app"}
+                            body:
+                                event: 
+                                    workflow_name : ${"Project ID Workflow"}
+                                    failure_point : ${failure_point}
+                                    error_type :    ${error_type}
+                                    error_message : ${error_message}
+                                    input_data :    ${input.data}
+                                    
+
+                                message: "Triggered by workflow"
+                            headers:
+                                Content-Type: "application/json"
+                            auth:
+                                type: OIDC
+                            timeout: 1800
+                        result: failure_endpoint_result
+                    retry: ${http.default_retry}
+
+                - log_failure_endpoint_result:
+                    call: sys.log
+                    args:
+                        text: ${"failure-endpoint output:" + json.encode_to_string(failure_endpoint_result)}
+                        severity: ERROR
+
+                - return_failure:
+                    return:
+                        message: "Workflow failed"
+                        error: ${error_message}
+            

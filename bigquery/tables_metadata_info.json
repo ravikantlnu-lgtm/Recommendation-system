@@ -1,0 +1,174 @@
+{
+    "partition_cluster_info": {
+        "assigned_search": {
+            "partition": "time_created",
+            "cluster": "project_id,search_id,territory_id"
+        },
+        "construct_connect_feed": {
+            "partition": "sourceFileCreationTime",
+            "cluster": "sourceFile,ProjectID"
+        },
+        "dodge_feed": {
+            "partition": "sourceFileCreationTime",
+            "cluster": "sourceFile,DRNumber,VersionNumber"
+        },
+        "project_relevance": {
+            "partition": "time_created",
+            "cluster": "project_id,search_id,territory_id"
+        },
+        "ranking_columns": {
+            "partition": null,
+            "cluster": "name"
+        },
+        "relevant_categories": {
+            "partition": null,
+            "cluster": "parent_category,category_type,value"
+        },
+        "relevant_materials": {
+            "partition": null,
+            "cluster": "division,material,code"
+        },
+        "searches_territories_map": {
+            "partition": null,
+            "cluster": "territory_id,search_id"
+        },
+        "searches": {
+            "partition": "upsert_time",
+            "cluster": "id,name,category"
+        },
+        "territories": {
+            "partition": "upsert_time",
+            "cluster": "id,name"
+        },
+        "projects_for_deduplication": {
+            "partition": "sourceFileCreationTime",
+            "cluster": "batch_id,sourceFile,project_id"
+        },
+        "llm_deduplication_result": {
+            "partition": "sourceFileCreationTime",
+            "cluster": "batch_id,llm_result"
+        },
+        "primary_project_lead": {
+            "partition": null,
+            "cluster": "batch_id,match_status"
+        },
+        "source_linking": {
+            "partition": "sourceFileCreationTime",
+            "cluster": "batch_id,match_status"
+        },
+        "coalesced_primary_project": {
+            "partition": "insert_timestamp",
+            "cluster": "batch_id,ProjectID"
+        },
+        "consolidated_primary_project_leads": {
+            "partition": "sourceFileCreationTime",
+            "cluster": "batch_id,candidate_source,primary_project_id"
+        }
+    },
+    "pk_fk_info": {
+        "assigned_search": {
+            "pk": null,
+            "fk": [
+                {
+                    "column_name": "project_id",
+                    "reference_table": "primary_project_lead",
+                    "reference_column": "primary_project_id"
+                },
+                {
+                    "column_name": "search_id",
+                    "reference_table": "searches",
+                    "reference_column": "id"
+                },
+                {
+                    "column_name": "territory_id",
+                    "reference_table": "territories",
+                    "reference_column": "id"
+                }
+            ]
+        },
+        "construct_connect_feed": {
+            "pk": "ProjectID",
+            "fk": null
+        },
+        "dodge_feed": {
+            "pk": "DRNumber",
+            "fk": null
+        },
+        "project_relevance": {
+            "pk": null,
+            "fk": [
+                {
+                    "column_name": "project_id",
+                    "reference_table": "primary_project_lead",
+                    "reference_column": "primary_project_id"
+                }
+            ]
+        },
+        "ranking_columns": {
+            "pk": null,
+            "fk": null
+        },
+        "relevant_categories": {
+            "pk": null,
+            "fk": null
+        },
+        "relevant_materials": {
+            "pk": null,
+            "fk": null
+        },
+        "searches": {
+            "pk": "id",
+            "fk": null
+        },
+        "searches_territories_map": {
+            "pk": null,
+            "fk": null
+        },
+        "territories": {
+            "pk": "id",
+            "fk": null
+        },
+        "primary_project_lead": {
+            "pk": "primary_project_id",
+            "fk": null
+        }
+    },
+    "default_values_info": {
+        "construct_connect_feed": [
+            {
+                "col": "time_created",
+                "value": "CURRENT_DATETIME()"
+            }
+        ],
+        "dodge_feed": [
+            {
+                "col": "time_created",
+                "value": "CURRENT_DATETIME()"
+            }
+        ],
+        "project_relevance": [
+            {
+                "col": "modified_on",
+                "value": "CURRENT_TIMESTAMP()"
+            }
+        ],
+        "hist_construct_connect_feed_log": [
+            {
+                "col": "create_dttm",
+                "value": "CURRENT_TIMESTAMP()"
+            }
+        ],
+        "llm_deduplication_result": [
+            {
+                "col": "insert_timestamp",
+                "value": "CURRENT_DATETIME()"
+            }
+        ],
+        "coalesced_primary_project": [
+            {
+                "col": "insert_timestamp",
+                "value": "CURRENT_DATETIME()"
+            }
+        ]
+    }
+}

@@ -1,0 +1,37 @@
+[
+    {
+      "name": "id",
+      "mode": "REQUIRED",
+      "type": "STRING",
+      "description": "Search ID (UUID)",
+      "fields": []
+    },
+    {
+      "name": "name",
+      "mode": "",
+      "type": "STRING",
+      "description": "Search name",
+      "fields": []
+    },
+    {
+      "name": "category",
+      "mode": "",
+      "type": "STRING",
+      "description": "Search category",
+      "fields": []
+    },
+    {
+      "name": "boolean",
+      "mode": "",
+      "type": "STRING",
+      "description": "Boolean search values",
+      "fields": []
+    },
+    {
+      "name": "upsert_time",
+      "mode": "",
+      "type": "DATETIME",
+      "description": "Time when search was upserted",
+      "fields": []
+    }
+  ]

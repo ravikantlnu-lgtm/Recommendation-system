@@ -1,0 +1,13 @@
+# Ignore Mac system files
+.DS_Store
+
+# Other common ignores
+node_modules/
+dist/
+build/
+*.log
+*.pkl
+*.pickle
+data/
+*.xlsx
+*.pyc

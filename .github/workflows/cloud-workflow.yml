@@ -1,0 +1,55 @@
+name: 'Manual Workflow Deployment'
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select environment (dev or prod)'
+        required: true
+        type: choice
+        options:
+          - dev
+          - prod
+
+jobs:
+  deploy-workflow:
+    name: 'Deploy Google Cloud Workflow'
+    runs-on: ubuntu-24.04
+    environment: ${{ github.event.inputs.environment }}
+    defaults:
+      run:
+        working-directory: workflow
+
+    steps:
+      - name: 'Checkout Code'
+        uses: actions/checkout@v2
+
+      # Authenticate to Google Cloud
+      - name: 'Authenticate to Google Cloud'
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+      # Set up Google Cloud SDK
+      - name: 'Set up Google Cloud SDK'
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+
+      # Deploy the Google Workflow
+      - name: 'Deploy Google Cloud Workflow for cloud functions'
+        run: |
+          WORKFLOW_FILE="cloud_functions_workflow_${{ github.event.inputs.environment }}.yml" 
+          gcloud workflows deploy cloud_functions_workflow \
+            --source=$WORKFLOW_FILE \
+            --location=${{ vars.REGION }} \
+            --project=${{ vars.GCP_PROJECT_ID }} 
+
+        
+      - name: 'Deploy Google Cloud Workflow for project id workflow'
+        run: |
+          WORKFLOW_FILE="project_id_workflow_${{ github.event.inputs.environment }}.yml" 
+          gcloud workflows deploy project-id-workflow \
+            --source=$WORKFLOW_FILE \
+            --location=${{ vars.REGION }} \
+            --project=${{ vars.GCP_PROJECT_ID }} 

@@ -1,0 +1,594 @@
+[
+  {
+    "name": "batch_id",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "primary_project_id",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "candidate_source",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "ProjectID",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Title",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Stage",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "URL",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Valuation_Value",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_Ownership",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_BidDate",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_BidTime",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_WorkType",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_Structures",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "DocumentAvailability_Plans",
+    "mode": "NULLABLE",
+    "type": "BOOLEAN",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "DocumentAvailability_Specs",
+    "mode": "NULLABLE",
+    "type": "BOOLEAN",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "DocumentAvailability_Addenda",
+    "mode": "NULLABLE",
+    "type": "BOOLEAN",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "ParentCategories_PrimaryCategoryName",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "ParentCategories_ParentCategory",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Name",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "SubCategories",
+        "mode": "NULLABLE",
+        "type": "RECORD",
+        "description": "",
+        "fields": [
+          {
+            "name": "SubCategory",
+            "mode": "REPEATED",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Addresses_Address",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "AddressLine1",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "AddressLine2",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "City",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "CountryRegion",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "County",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "Latitude",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "Longitude",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "ProjectAddressType",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "StateProvince",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "ZipPostalCode",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "Details_Detail_Scope",
+    "mode": "REPEATED",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Details_Detail_Notes",
+    "mode": "REPEATED",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Details_Detail",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "DetailType",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "Materials_Material",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Metals",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_ThermalandMoistureProtection",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Openings",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Finishes",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Masonry",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "NULLABLE",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "NULLABLE",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "NULLABLE",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "Parameters_Parameter_CommenceDate",
+    "mode": "",
+    "type": "DATE",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_FloorArea",
+    "mode": "",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "sourceFileCreationTime",
+    "mode": "NULLABLE",
+    "type": "DATETIME",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "GC_company",
+    "mode": "",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "companyname",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "address1_city",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "address1_stateorprovince",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "address1_county",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "emailaddress1",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "mobilephone",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "firstname",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "lastname",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "fbm_externalleadbidders",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  }
+]

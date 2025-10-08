@@ -1,0 +1,2069 @@
+[
+  {
+    "name": "ProjectID",
+    "mode": "",
+    "type": "INTEGER",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "DataSourceID",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Title",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Stage",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "URL",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "UpdateDate",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "IsProspective",
+    "mode": "",
+    "type": "BOOLEAN",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "UpdateText",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Valuation_Value",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Valuation_Currency",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Valuation_ValueType",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_Ownership",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_WorkType",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_CommenceDate",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_CompletionDate",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_FloorsAboveGround",
+    "mode": "",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_Structures",
+    "mode": "",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_Units",
+    "mode": "",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_BidDate",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_BidTime",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_IsSingleTrade",
+    "mode": "",
+    "type": "BOOLEAN",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "DocumentAvailability_Plans",
+    "mode": "",
+    "type": "BOOLEAN",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "DocumentAvailability_Specs",
+    "mode": "",
+    "type": "BOOLEAN",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "DocumentAvailability_Addenda",
+    "mode": "",
+    "type": "BOOLEAN",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "ParentCategories_PrimaryCategoryName",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "ParentCategories_ParentCategory",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Name",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "SubCategories",
+        "mode": "",
+        "type": "RECORD",
+        "description": "",
+        "fields": [
+          {
+            "name": "SubCategory",
+            "mode": "REPEATED",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Addresses_Address",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "ProjectAddressType",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "AddressLine1",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "AddressLine2",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "City",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "CountryRegion",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "County",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "Latitude",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "Longitude",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "StateProvince",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "ZipPostalCode",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "Contracts_Contract",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "BidDate",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "BidTime",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "BidType",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "BidsTo",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "Bonding",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "Classification",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "Invitation",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "PlansFrom",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "ProjectEvents_ProjectEvent",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Event",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "EventDate",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "EventDetails",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "EventTime",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "Companies",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Company",
+        "mode": "REPEATED",
+        "type": "RECORD",
+        "description": "",
+        "fields": [
+          {
+            "name": "BiddingRole",
+            "mode": "",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "CompanyID",
+            "mode": "",
+            "type": "INTEGER",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "DataSourceID",
+            "mode": "",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "LastUpdate",
+            "mode": "",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "Name",
+            "mode": "",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "Role",
+            "mode": "",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "URL",
+            "mode": "",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "Addresses",
+            "mode": "",
+            "type": "RECORD",
+            "description": "",
+            "fields": [
+              {
+                "name": "Address",
+                "mode": "REPEATED",
+                "type": "RECORD",
+                "description": "",
+                "fields": [
+                  {
+                    "name": "AddressType",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "AddressLine1",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "AddressLine2",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "City",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "CountryRegion",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "County",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "StateProvince",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "ZipPostalCode",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "BidderRoles",
+            "mode": "",
+            "type": "RECORD",
+            "description": "",
+            "fields": [
+              {
+                "name": "Bidder",
+                "mode": "REPEATED",
+                "type": "RECORD",
+                "description": "",
+                "fields": [
+                  {
+                    "name": "BidCreateDate",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "BidRank",
+                    "mode": "",
+                    "type": "INTEGER",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "BidValue",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "BidderClassification",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "ClassificationTypes",
+            "mode": "",
+            "type": "RECORD",
+            "description": "",
+            "fields": [
+              {
+                "name": "ClassificationType",
+                "mode": "REPEATED",
+                "type": "RECORD",
+                "description": "",
+                "fields": [
+                  {
+                    "name": "Rank",
+                    "mode": "",
+                    "type": "INTEGER",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "Type",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Contacts",
+            "mode": "",
+            "type": "RECORD",
+            "description": "",
+            "fields": [
+              {
+                "name": "Contact",
+                "mode": "REPEATED",
+                "type": "RECORD",
+                "description": "",
+                "fields": [
+                  {
+                    "name": "ContactID",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "Name",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "Email",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "LinkedInURL",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "PhoneNumber",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Email",
+            "mode": "",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "ParticipantRoles",
+            "mode": "",
+            "type": "RECORD",
+            "description": "",
+            "fields": [
+              {
+                "name": "ParticipantRole",
+                "mode": "",
+                "type": "RECORD",
+                "description": "",
+                "fields": [
+                  {
+                    "name": "ContactId",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "ContactName",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "RoleClassification",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "RoleStatus",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Phones",
+            "mode": "",
+            "type": "RECORD",
+            "description": "",
+            "fields": [
+              {
+                "name": "Phone",
+                "mode": "REPEATED",
+                "type": "RECORD",
+                "description": "",
+                "fields": [
+                  {
+                    "name": "PhoneNumnber",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "PhoneType",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Website",
+            "mode": "",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Users",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "User",
+        "mode": "REPEATED",
+        "type": "RECORD",
+        "description": "",
+        "fields": [
+          {
+            "name": "ProjectFlaggedForExport",
+            "mode": "",
+            "type": "BOOLEAN",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "UserFullName",
+            "mode": "",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "UserId",
+            "mode": "",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "UserName",
+            "mode": "",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "Queries",
+            "mode": "",
+            "type": "RECORD",
+            "description": "",
+            "fields": [
+              {
+                "name": "Query",
+                "mode": "REPEATED",
+                "type": "RECORD",
+                "description": "",
+                "fields": [
+                  {
+                    "name": "DocCenterUrl",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "QueryId",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  },
+                  {
+                    "name": "QueryName",
+                    "mode": "",
+                    "type": "STRING",
+                    "description": "",
+                    "fields": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "UpdateSummarizations_UpdateSummary",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Summary",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "UpdateSummaryDate",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "PlanSpecs",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "PlanSpec",
+        "mode": "",
+        "type": "RECORD",
+        "description": "",
+        "fields": [
+          {
+            "name": "Deposit",
+            "mode": "",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "From",
+            "mode": "",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "URL",
+            "mode": "",
+            "type": "STRING",
+            "description": "",
+            "fields": []
+          },
+          {
+            "name": "PlanRoom",
+            "mode": "REPEATED",
+            "type": "RECORD",
+            "description": "",
+            "fields": [
+              {
+                "name": "Bin",
+                "mode": "",
+                "type": "STRING",
+                "description": "",
+                "fields": []
+              },
+              {
+                "name": "PlanRoom",
+                "mode": "",
+                "type": "STRING",
+                "description": "",
+                "fields": []
+              },
+              {
+                "name": "URL",
+                "mode": "",
+                "type": "STRING",
+                "description": "",
+                "fields": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Details_Detail_Scope",
+    "mode": "REPEATED",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Details_Detail_Notes",
+    "mode": "REPEATED",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Details_Detail",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "DetailType",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Concrete",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Metals",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_WoodPlasticsandComposites",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_ThermalandMoistureProtection",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Openings",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Finishes",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Furnishings",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_ConveyingEquipment",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_FireSuppression",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Plumbing",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_HeatingVentilatingandAirConditioningHVAC",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Electrical",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Communications",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_ElectronicSafetyandSecurity",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Earthwork",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Utilities",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "Notes",
+    "mode": "",
+    "type": "INTEGER",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "ListDate",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Connections",
+    "mode": "REPEATED",
+    "type": "INTEGER",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Details_Detail_Details",
+    "mode": "REPEATED",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Materials_Material",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "ProjectParentID",
+    "mode": "",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_FloorArea",
+    "mode": "",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_FloorAreaUnitofMeasure",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Specialties",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Masonry",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_Equipment",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "Parameters_Parameter_MandatoryPreBidConferenceDate",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_GeneralRequirements",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "RSMeansMaterialDivisions_Division_SpecialConstruction",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "Code",
+        "mode": "",
+        "type": "INTEGER",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "InstallationCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "MaterialCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "TotalCostValue",
+        "mode": "",
+        "type": "NUMERIC",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "_",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "Parameters_Parameter_SingleTradeClassification",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_LEEDCertificationIntent",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_FloorsBelowGround",
+    "mode": "",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_ParkingSpaces",
+    "mode": "",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_SiteArea",
+    "mode": "",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_SiteAreaUnitofMeasure",
+    "mode": "",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Notes_Note",
+    "mode": "REPEATED",
+    "type": "RECORD",
+    "description": "",
+    "fields": [
+      {
+        "name": "CreateDate",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "ModifyDate",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "NoteId",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "NoteText",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      },
+      {
+        "name": "UserId",
+        "mode": "",
+        "type": "STRING",
+        "description": "",
+        "fields": []
+      }
+    ]
+  },
+  {
+    "name": "sourceFile",
+    "mode": "",
+    "type": "STRING",
+    "description": "XML Source File name ",
+    "fields": []
+  },
+  {
+    "name": "time_created",
+    "mode": "",
+    "type": "DATETIME",
+    "description": "Record creation time in BigQuery.",
+    "fields": []
+  },
+  {
+    "name": "sourceFileCreationTime",
+    "mode": "",
+    "type": "DATETIME",
+    "description": "Time when XML file was uploaded to GCS",
+    "fields": []
+  },
+  {
+    "name": "Parameters_Parameter_GreenBuildingCertification",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Details_Detail_ContractConditions",
+    "mode": "REPEATED",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Details",
+    "mode": "NULLABLE",
+    "type": "FLOAT",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Details_Detail_Subbids",
+    "mode": "REPEATED",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Details_Detail_QuantityUnitprices",
+    "mode": "REPEATED",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  },
+  {
+    "name": "Details_Detail_Status",
+    "mode": "REPEATED",
+    "type": "STRING",
+    "description": "",
+    "fields": []
+  }
+]

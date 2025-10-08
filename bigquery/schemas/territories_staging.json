@@ -1,0 +1,37 @@
+[
+  {
+    "name": "id",
+    "mode": "REQUIRED",
+    "type": "STRING",
+    "description": "Territory ID (UUID)",
+    "fields": []
+  },
+  {
+    "name": "name",
+    "mode": "",
+    "type": "STRING",
+    "description": "Territory name",
+    "fields": []
+  },
+  {
+    "name": "latitude",
+    "mode": "",
+    "type": "FLOAT",
+    "description": "Territory lattitude",
+    "fields": []
+  },
+  {
+    "name": "longitude",
+    "mode": "",
+    "type": "FLOAT",
+    "description": "Territory longitude",
+    "fields": []
+  },
+  {
+    "name": "upsert_time",
+    "mode": "",
+    "type": "DATETIME",
+    "description": "Time when search was upserted",
+    "fields": []
+  }
+]

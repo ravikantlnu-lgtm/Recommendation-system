@@ -1,0 +1,700 @@
+# PIPELINE DEFINITION
+# Name: tuning-job
+# Inputs:
+#    base_model: str
+#    bucket: str
+#    data_output_filename: str
+#    epochs: int [Default: 1.0]
+#    formatted_data_output_filename: str
+#    id_col: str
+#    labels: list [Default: ['very high', 'high', 'moderate', 'low', 'not relevant']]
+#    location: str
+#    model_display_name: str
+#    project_details_col: list
+#    project_id: str
+#    prompt: str
+#    prompt_type: str [Default: 'parts']
+#    query_col: str
+#    response_col: str
+#    search_col: str
+#    seed: int [Default: 42.0]
+#    training_split: float [Default: 0.8]
+components:
+  comp-evaluate-model:
+    executorLabel: exec-evaluate-model
+    inputDefinitions:
+      artifacts:
+        X_test:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+        y_test:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+      parameters:
+        base_model:
+          parameterType: STRING
+        bucket:
+          parameterType: STRING
+        id_col:
+          parameterType: STRING
+        labels:
+          parameterType: LIST
+        location:
+          parameterType: STRING
+        project_id:
+          parameterType: STRING
+        prompt:
+          parameterType: STRING
+        prompt_type:
+          parameterType: STRING
+        query_col:
+          parameterType: STRING
+        response_col:
+          parameterType: STRING
+        search_col:
+          parameterType: STRING
+        tuned_model_endpoint:
+          parameterType: STRING
+    outputDefinitions:
+      parameters:
+        base_model:
+          parameterType: STRING
+        f1_scores:
+          parameterType: STRUCT
+        tuned_model_endpoint:
+          parameterType: STRING
+  comp-format-tuning-data:
+    executorLabel: exec-format-tuning-data
+    inputDefinitions:
+      parameters:
+        bucket:
+          parameterType: STRING
+        dataset_gcs_uri:
+          parameterType: STRING
+        id_col:
+          parameterType: STRING
+        output_filename:
+          parameterType: STRING
+        project_id:
+          parameterType: STRING
+        prompt:
+          parameterType: STRING
+        prompt_type:
+          defaultValue: parts
+          isOptional: true
+          parameterType: STRING
+        query_col:
+          parameterType: STRING
+        response_col:
+          parameterType: STRING
+        search_col:
+          parameterType: STRING
+        seed:
+          defaultValue: 42.0
+          isOptional: true
+          parameterType: NUMBER_INTEGER
+        training_split:
+          defaultValue: 0.8
+          isOptional: true
+          parameterType: NUMBER_DOUBLE
+    outputDefinitions:
+      artifacts:
+        X_test_output:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+        y_test_output:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+      parameters:
+        formatted_training_dataset_gcs_uri:
+          parameterType: STRING
+  comp-ingest-data:
+    executorLabel: exec-ingest-data
+    inputDefinitions:
+      parameters:
+        bucket:
+          parameterType: STRING
+        location:
+          parameterType: STRING
+        project_id:
+          parameterType: STRING
+    outputDefinitions:
+      artifacts:
+        dataset:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+        filters_dataset:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+  comp-preprocess-data:
+    executorLabel: exec-preprocess-data
+    inputDefinitions:
+      artifacts:
+        dataset:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+        filters_dataset:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+      parameters:
+        bucket:
+          parameterType: STRING
+        id_col:
+          parameterType: STRING
+        output_filename:
+          parameterType: STRING
+        project_details_col:
+          parameterType: LIST
+        project_id:
+          parameterType: STRING
+        query_col:
+          parameterType: STRING
+        response_col:
+          parameterType: STRING
+        search_col:
+          parameterType: STRING
+    outputDefinitions:
+      parameters:
+        Output:
+          parameterType: STRING
+  comp-tune-model:
+    executorLabel: exec-tune-model
+    inputDefinitions:
+      parameters:
+        base_model:
+          defaultValue: gemini-2.0-flash-001
+          isOptional: true
+          parameterType: STRING
+        bucket:
+          parameterType: STRING
+        dataset_uri:
+          parameterType: STRING
+        epochs:
+          defaultValue: 5.0
+          isOptional: true
+          parameterType: NUMBER_INTEGER
+        model_display_name:
+          parameterType: STRING
+        project_id:
+          parameterType: STRING
+    outputDefinitions:
+      parameters:
+        Output:
+          parameterType: STRING
+deploymentSpec:
+  executors:
+    exec-evaluate-model:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - evaluate_model
+        command:
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          _KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef evaluate_model(project_id: str, \n                location: str,\n\
+          \                bucket: str,\n                base_model: str,\n      \
+          \          tuned_model_endpoint: str, \n                X_test: Input[Dataset],\
+          \ \n                y_test: Input[Dataset], \n                prompt: str,\
+          \ \n                id_col: str,\n                search_col: str, \n  \
+          \              query_col: str, \n                response_col: str, \n \
+          \               prompt_type: str, \n                labels: List[str]) ->\
+          \ NamedTuple('outputs', [('f1_scores', dict), ('base_model', str), ('tuned_model_endpoint',\
+          \ str)]):\n\n    from tqdm import tqdm\n    import json \n    import logging\n\
+          \    import pandas as pd \n    from vertexai.generative_models import GenerativeModel,\
+          \ GenerationConfig\n    from sklearn.preprocessing import OrdinalEncoder\
+          \ \n    from sklearn.metrics import f1_score\n    from utils import row_to_content_parts,\
+          \ row_to_embedded_prompt\n\n    def strip_json(output, response_col):\n\
+          \        try: \n            output = output.replace(\"```json\", \"\").replace(\"\
+          ```\", \"\").replace(\"[\", \"\").replace(\"]\", \"\").strip() \n      \
+          \      output_json = json.loads(output)\n            return output_json[response_col]\n\
+          \        except Exception as e: \n            logging.info(f\"Error stripping\
+          \ JSON: {e}\")\n\n    with open(X_test.path, 'r') as f:\n        X_test\
+          \ = pd.read_csv(f)\n\n    with open(y_test.path, 'r') as f:\n        y_test\
+          \ = pd.read_csv(f)\n\n    X_test_formatted = []\n\n    logging.info(\"Formatting\
+          \ test data for evaluation...\")\n    for _, row in X_test.iterrows(): \n\
+          \        try: \n\n            if prompt_type == 'parts': \n            \
+          \    parts = row_to_content_parts(row = row, \n                        \
+          \                    prompt = prompt, \n                               \
+          \             search_col = search_col, \n                              \
+          \              query_col = query_col) \n\n            elif prompt_type ==\
+          \ 'embedded':\n                parts = row_to_embedded_prompt(row=row, \n\
+          \                                                prompt = prompt, \n   \
+          \                                             search_col = search_col, \n\
+          \                                                query_col = query_col)\n\
+          \n            content_row = {\"contents\": []}\n            for part in\
+          \ parts:\n                content_row[\"contents\"].append(part['text'])\n\
+          \n            # Add record to formatted training data\n            X_test_formatted.append(content_row)\n\
+          \        except Exception as e:\n            logging.error(f\"Error formatting\
+          \ input data: {e}\")\n            continue \n\n    predictions_tuned = []\
+          \ \n    predictions_base = []\n\n    response_schema = {\n        \"type\"\
+          : \"OBJECT\",\n        \"properties\": {\n            id_col: {\"type\"\
+          : \"STRING\"}, \n            response_col: {\"type\": \"STRING\", \n   \
+          \                         \"enum\": labels}  # Use the provided labels for\
+          \ the response column\n        }\n    }\n\n    config = GenerationConfig(response_schema=response_schema,\
+          \ response_mime_type=\"application/json\")\n    tuned_model = GenerativeModel(tuned_model_endpoint)\n\
+          \    baseline_model = GenerativeModel(base_model)\n\n    logging.info(\"\
+          Generating predictions for test data...\")\n    for item in tqdm(X_test_formatted):\
+          \ \n\n        # Generate content using the tuned and base\n        tuned_response\
+          \ = tuned_model.generate_content(contents=item[\"contents\"], generation_config=config)\n\
+          \        base_response = baseline_model.generate_content(contents=item[\"\
+          contents\"], generation_config=config)\n\n        predictions_tuned.append(tuned_response.text)\n\
+          \        predictions_base.append(base_response.text)\n\n\n    cleaned_predictions_tuned\
+          \ = [strip_json(output, response_col) for output in predictions_tuned]\n\
+          \    cleaned_predictions_base = [strip_json(output, response_col) for output\
+          \ in predictions_base]\n\n    predictions_df = y_test.copy() \n    predictions_df[f\"\
+          {response_col}_tuned\"] = cleaned_predictions_tuned\n    predictions_df[f\"\
+          {response_col}_base\"] = cleaned_predictions_base\n\n    logging.info(predictions_df[response_col].value_counts())\n\
+          \    logging.info(predictions_df[f\"{response_col}_tuned\"].value_counts())\n\
+          \    logging.info(predictions_df[f\"{response_col}_base\"].value_counts())\n\
+          \n    # Encode the relevance columns\n    logging.info(\"Encoding relevance\
+          \ columns...\")\n    relevance_columns = predictions_df.filter(regex=response_col).columns\n\
+          \n    encoder = OrdinalEncoder(categories=[labels], handle_unknown='use_encoded_value',\
+          \ unknown_value=-1)\n    for col in relevance_columns: \n        predictions_df[col]\
+          \ = predictions_df[col].astype(str).str.lower()\n        predictions_df[col]\
+          \ = encoder.fit_transform(predictions_df[[col]])\n\n    logging.info(f\"\
+          Predictions DataFrame:\\n{predictions_df.head()}\")\n    f1_scores = {}\n\
+          \n    for col in relevance_columns: \n        f1 = f1_score(predictions_df[response_col],\
+          \ predictions_df[col], average='weighted')\n        f1_scores[col] = f1\n\
+          \n    logging.info(f\"F1 Scores: {f1_scores}\")\n\n    outputs = NamedTuple('outputs',\
+          \ [('f1_scores', dict), ('base_model', str), ('tuned_model_endpoint', str)])\n\
+          \n    return outputs(f1_scores=f1_scores, base_model=base_model, tuned_model_endpoint=tuned_model_endpoint)\n\
+          \n"
+        image: us-central1-docker.pkg.dev/proj-sales-recommender-dev/model-tuning/components:latest
+    exec-format-tuning-data:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - format_tuning_data
+        command:
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          _KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef format_tuning_data(project_id: str,\n                bucket:\
+          \ str,\n                dataset_gcs_uri: str,\n                prompt: str,\n\
+          \                id_col: str,\n                search_col: str,\n      \
+          \          query_col: str,\n                response_col: str,\n       \
+          \         output_filename: str,\n                X_test_output: Output[Dataset],\n\
+          \                y_test_output: Output[Dataset],\n                prompt_type:\
+          \ str = \"parts\",\n                training_split: float = .8,\n      \
+          \          seed: int = 42,\n                ) -> NamedTuple('outputs', [('formatted_training_dataset_gcs_uri',\
+          \ str)]):\n    \"\"\" \n    Loads, preprocesses data for fine-tuning, saves\
+          \ to GCS\n\n    \"\"\"\n\n    import logging\n    import pandas as pd \n\
+          \    import json\n    from sklearn.model_selection import train_test_split\n\
+          \    from utils import download_file_from_gcs, upload_file_to_gcs, row_to_content_parts,\
+          \ row_to_embedded_prompt\n\n    # Download dataset from GCS\n    logging.info(f\"\
+          Downloading dataset from GCS: {dataset_gcs_uri}\")\n    filename = 'preprocessed_data.csv'\n\
+          \    download_file_from_gcs(bucket_name=bucket, \n                     \
+          \      blob_name=dataset_gcs_uri.replace(f'gs://{bucket}/', ''),\n     \
+          \                      local_file_path=filename)\n    df = pd.read_csv(filename)\n\
+          \n    # Split data into training and testing sets\n    logging.info(\"Splitting\
+          \ data into training and testing sets...\")\n    X = df.drop(columns = [response_col])\n\
+          \    y = df[response_col]\n    X_train, X_test, y_train, y_test = train_test_split(X,\
+          \ y, train_size=training_split, random_state=seed)\n\n    # Add ID column\
+          \ back \n    y_train = pd.concat([pd.DataFrame(X_train[id_col]), y_train],\
+          \ axis=1)\n    y_test = pd.concat([pd.DataFrame(X_test[id_col]), y_test],\
+          \ axis=1)\n\n    # Format training data\n    logging.info(\"Formatting training\
+          \ data as parts...\")\n    formatted_training_data = []\n    for index,\
+          \ row in X_train.iterrows(): \n        try: \n\n            if prompt_type\
+          \ == \"parts\": \n                input_data_parts = row_to_content_parts(row\
+          \ = row, \n                                                            prompt\
+          \ = prompt, \n                                                         \
+          \   search_col = search_col, \n                                        \
+          \                    query_col = query_col, \n                         \
+          \                                   examples = True) \n            elif\
+          \ prompt_type == \"embedded\":\n                input_data_parts = row_to_embedded_prompt(row\
+          \ = row, \n                                                            prompt\
+          \ = prompt, \n                                                         \
+          \   search_col = search_col, \n                                        \
+          \                    query_col = query_col, \n                         \
+          \                                   examples = True)\n\n            # Format\
+          \ response as json\n            output_data_json = y_train.loc[index].to_json()\
+          \ \n\n            # Construct content row\n            content_row = {\"\
+          contents\": []}\n            content_row[\"contents\"].append({\"role\"\
+          : \"user\", \"parts\": input_data_parts})\n            content_row[\"contents\"\
+          ].append({\"role\": \"model\", \"parts\": [{\"text\": output_data_json}]})\n\
+          \n            # Add record to formatted training data\n            formatted_training_data.append(content_row)\n\
+          \        except Exception as e:\n            logging.error(f\"Error formatting\
+          \ row {index}: {str(e)}\")\n            continue\n\n    logging.info(f\"\
+          Formatted training data: {formatted_training_data[0]['contents']}\")  #\
+          \ Print first entry for debugging\n\n    # Save JSONL training data to local\
+          \ path \n    output_jsonl = f\"{output_filename}_{prompt_type}.jsonl\"\n\
+          \    tmp = 'formatted_training_data.jsonl'\n    with open(tmp, 'w') as f:\n\
+          \        for record in formatted_training_data:\n            f.write(json.dumps(record)\
+          \ + '\\n')\n\n    # Upload formatted training data to GCS\n    try: \n \
+          \       logging.info(f\"Uploading file to bucket: {bucket} with filename:\
+          \ {output_jsonl}\")\n        formatted_training_dataset_gcs_uri = upload_file_to_gcs(tmp,\
+          \ bucket, output_jsonl)\n        logging.info(f\"File {output_filename}\
+          \ successfully uploaded to GCS bucket {formatted_training_dataset_gcs_uri}\"\
+          )\n    except Exception as e:\n        logging.error(f\"Failed to upload\
+          \ file {output_filename} to GCS. Error: {str(e)}\")\n        raise\n\n \
+          \   logging.info(f\"Formatted training dataset GCS URI: {formatted_training_dataset_gcs_uri}\"\
+          )\n\n    logging.info(f\"Saving test data to output dataset paths...\")\n\
+          \    # Save test data to output dataset paths\n    X_test.to_csv(X_test_output.path,\
+          \ index=False)\n    y_test.to_csv(y_test_output.path, index=False)\n\n \
+          \   outputs = NamedTuple('outputs', [('formatted_training_dataset_gcs_uri',\
+          \ str)])\n\n    return outputs(formatted_training_dataset_gcs_uri)\n\n"
+        image: us-central1-docker.pkg.dev/proj-sales-recommender-dev/model-tuning/components:latest
+    exec-ingest-data:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - ingest_data
+        command:
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          _KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef ingest_data(project_id: str, \n                location: str,\n\
+          \                bucket: str, \n                dataset: Output[Dataset],\
+          \ \n                filters_dataset: Output[Dataset]\n                ):\
+          \ \n\n    import logging\n    from utils import setup_logging, init_vertex\n\
+          \    import pandas as pd\n\n    setup_logging()\n    init_vertex(project_id,\
+          \ location)\n\n    logging.info(\"Reading data from GCS...\")\n    # Placeholder\
+          \ for data ingestion logic\n    df = pd.read_csv(f\"gs://{bucket}/tuning_pipeline/data/labeled_df_relevance.csv\"\
+          )\n    df.to_csv(dataset.path, index = True)\n\n    filters_df = pd.read_csv(f\"\
+          gs://{bucket}/data/boolean_filters_latest.csv\")\n    filters_df.to_csv(filters_dataset.path,\
+          \ index = True)\n\n    return\n\n"
+        image: us-central1-docker.pkg.dev/proj-sales-recommender-dev/model-tuning/components:latest
+    exec-preprocess-data:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - preprocess_data
+        command:
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          _KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef preprocess_data(project_id: str, \n                    bucket:\
+          \ str, \n                    id_col: str, \n                    search_col:\
+          \ str, \n                    query_col: str,\n                    response_col:\
+          \ str, \n                    output_filename: str,\n                   \
+          \ project_details_col: List[str],\n                    dataset: Input[Dataset],\
+          \ \n                    filters_dataset: Input[Dataset],\n             \
+          \       ) -> str:\n\n    import pandas as pd \n    import numpy as np\n\
+          \    import json\n    import logging\n    from utils import upload_file_to_gcs\n\
+          \n    def add_query_terms(row, search_col, boolean_filters):\n        product\
+          \ = row[search_col]\n        search_terms = [filter['Query'] for filter\
+          \ in boolean_filters if filter['Filter'] == product][0]\n        return\
+          \ search_terms\n\n    with open(dataset.path, 'r') as f:\n        df = pd.read_csv(f)\n\
+          \n    with open(filters_dataset.path, 'r') as file:\n        filters_df\
+          \ = pd.read_csv(file)\n\n    # Format boolean filters\n    logging.info(\"\
+          Loading boolean filters...\")\n    boolean_filters = json.loads(filters_df.to_json(orient='records'))\n\
+          \n    # Add query terms to dataframe\n    logging.info(\"Adding query terms\
+          \ to dataframe...\")\n    df[query_col] = df.apply(lambda row: add_query_terms(row=row,\
+          \ search_col=search_col, boolean_filters=boolean_filters), axis=1)\n\n \
+          \   logging.info(\"Preprocessing data...\")\n\n    # Reorder columns\n \
+          \   df = df[[id_col, search_col, query_col, response_col] + project_details_col]\n\
+          \n    # Drop rows with missing values in key columns\n    df.dropna(subset\
+          \ = [id_col, search_col, query_col, response_col], inplace=True)\n\n   \
+          \ logging.info(f\"Data preprocessing complete. df: {df.head()}\")\n\n  \
+          \  # Save preprocessed data to CSV\n    output_csv = f\"{output_filename}.csv\"\
+          \n    tmp = 'data.csv'\n    df.to_csv(tmp, index=False)\n    try:\n    \
+          \    logging.info(f\"Attempting to upload file to bucket: {bucket} with\
+          \ filename: {output_csv}\")\n        dataset_gcs_uri = upload_file_to_gcs(tmp,\
+          \ bucket, output_csv)\n        logging.info(f\"File {output_csv} successfully\
+          \ uploaded to GCS bucket {dataset_gcs_uri}\")\n    except Exception as e:\n\
+          \        logging.error(f\"Failed to upload file {output_csv} to GCS. Error:\
+          \ {str(e)}\")\n        raise\n\n    return dataset_gcs_uri\n\n"
+        image: us-central1-docker.pkg.dev/proj-sales-recommender-dev/model-tuning/components:latest
+    exec-tune-model:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - tune_model
+        command:
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          _KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef tune_model(project_id: str, \n               bucket: str, \n\
+          \               dataset_uri: str, \n               model_display_name: str,\
+          \ \n               base_model: str = \"gemini-2.0-flash-001\", \n      \
+          \         epochs: int = 5,\n               ) -> str: \n\n    from vertexai.tuning\
+          \ import sft \n    import time\n    import logging \n\n    return 'projects/195063057478/locations/us-central1/endpoints/8215873039649210368'\n\
+          \n    logging.info(\"Starting tuning job...\")\n    sft_tuning_job = sft.train(\
+          \ \n        source_model = base_model, \n        train_dataset = dataset_uri,\n\
+          \        tuned_model_display_name=model_display_name,\n        epochs =\
+          \ epochs \n    )\n\n    while not sft_tuning_job.has_ended: \n        logging.info(f\"\
+          Waiting for tuning job to complete...\")\n        time.sleep(120)\n    \
+          \    sft_tuning_job.refresh()\n\n    tuned_model_endpoint = sft_tuning_job.tuned_model_endpoint_name\n\
+          \    logging.info(f\"Tuning job completed. Model name: {sft_tuning_job.tuned_model_name}\"\
+          )\n    logging.info(f\"Model endpoint: {tuned_model_endpoint}\")\n\n   \
+          \ return tuned_model_endpoint\n\n"
+        image: us-central1-docker.pkg.dev/proj-sales-recommender-dev/model-tuning/components:latest
+pipelineInfo:
+  name: tuning-job
+root:
+  dag:
+    tasks:
+      evaluate-model:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-evaluate-model
+        dependentTasks:
+        - format-tuning-data
+        - tune-model
+        inputs:
+          artifacts:
+            X_test:
+              taskOutputArtifact:
+                outputArtifactKey: X_test_output
+                producerTask: format-tuning-data
+            y_test:
+              taskOutputArtifact:
+                outputArtifactKey: y_test_output
+                producerTask: format-tuning-data
+          parameters:
+            base_model:
+              componentInputParameter: base_model
+            bucket:
+              componentInputParameter: bucket
+            id_col:
+              componentInputParameter: id_col
+            labels:
+              componentInputParameter: labels
+            location:
+              componentInputParameter: location
+            project_id:
+              componentInputParameter: project_id
+            prompt:
+              componentInputParameter: prompt
+            prompt_type:
+              componentInputParameter: prompt_type
+            query_col:
+              componentInputParameter: query_col
+            response_col:
+              componentInputParameter: response_col
+            search_col:
+              componentInputParameter: search_col
+            tuned_model_endpoint:
+              taskOutputParameter:
+                outputParameterKey: Output
+                producerTask: tune-model
+        taskInfo:
+          name: evaluate-model
+      format-tuning-data:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-format-tuning-data
+        dependentTasks:
+        - preprocess-data
+        inputs:
+          parameters:
+            bucket:
+              componentInputParameter: bucket
+            dataset_gcs_uri:
+              taskOutputParameter:
+                outputParameterKey: Output
+                producerTask: preprocess-data
+            id_col:
+              componentInputParameter: id_col
+            output_filename:
+              componentInputParameter: formatted_data_output_filename
+            project_id:
+              componentInputParameter: project_id
+            prompt:
+              componentInputParameter: prompt
+            prompt_type:
+              componentInputParameter: prompt_type
+            query_col:
+              componentInputParameter: query_col
+            response_col:
+              componentInputParameter: response_col
+            search_col:
+              componentInputParameter: search_col
+            seed:
+              componentInputParameter: seed
+            training_split:
+              componentInputParameter: training_split
+        taskInfo:
+          name: format-tuning-data
+      ingest-data:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-ingest-data
+        inputs:
+          parameters:
+            bucket:
+              componentInputParameter: bucket
+            location:
+              componentInputParameter: location
+            project_id:
+              componentInputParameter: project_id
+        taskInfo:
+          name: ingest-data
+      preprocess-data:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-preprocess-data
+        dependentTasks:
+        - ingest-data
+        inputs:
+          artifacts:
+            dataset:
+              taskOutputArtifact:
+                outputArtifactKey: dataset
+                producerTask: ingest-data
+            filters_dataset:
+              taskOutputArtifact:
+                outputArtifactKey: filters_dataset
+                producerTask: ingest-data
+          parameters:
+            bucket:
+              componentInputParameter: bucket
+            id_col:
+              componentInputParameter: id_col
+            output_filename:
+              componentInputParameter: data_output_filename
+            project_details_col:
+              componentInputParameter: project_details_col
+            project_id:
+              componentInputParameter: project_id
+            query_col:
+              componentInputParameter: query_col
+            response_col:
+              componentInputParameter: response_col
+            search_col:
+              componentInputParameter: search_col
+        taskInfo:
+          name: preprocess-data
+      tune-model:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-tune-model
+        dependentTasks:
+        - format-tuning-data
+        inputs:
+          parameters:
+            base_model:
+              componentInputParameter: base_model
+            bucket:
+              componentInputParameter: bucket
+            dataset_uri:
+              taskOutputParameter:
+                outputParameterKey: formatted_training_dataset_gcs_uri
+                producerTask: format-tuning-data
+            epochs:
+              componentInputParameter: epochs
+            model_display_name:
+              componentInputParameter: model_display_name
+            project_id:
+              componentInputParameter: project_id
+        taskInfo:
+          name: tune-model
+  inputDefinitions:
+    parameters:
+      base_model:
+        parameterType: STRING
+      bucket:
+        parameterType: STRING
+      data_output_filename:
+        parameterType: STRING
+      epochs:
+        defaultValue: 1.0
+        isOptional: true
+        parameterType: NUMBER_INTEGER
+      formatted_data_output_filename:
+        parameterType: STRING
+      id_col:
+        parameterType: STRING
+      labels:
+        defaultValue:
+        - very high
+        - high
+        - moderate
+        - low
+        - not relevant
+        isOptional: true
+        parameterType: LIST
+      location:
+        parameterType: STRING
+      model_display_name:
+        parameterType: STRING
+      project_details_col:
+        parameterType: LIST
+      project_id:
+        parameterType: STRING
+      prompt:
+        parameterType: STRING
+      prompt_type:
+        defaultValue: parts
+        isOptional: true
+        parameterType: STRING
+      query_col:
+        parameterType: STRING
+      response_col:
+        parameterType: STRING
+      search_col:
+        parameterType: STRING
+      seed:
+        defaultValue: 42.0
+        isOptional: true
+        parameterType: NUMBER_INTEGER
+      training_split:
+        defaultValue: 0.8
+        isOptional: true
+        parameterType: NUMBER_DOUBLE
+schemaVersion: 2.1.0
+sdkVersion: kfp-2.10.0

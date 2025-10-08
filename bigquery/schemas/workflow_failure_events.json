@@ -1,0 +1,44 @@
+[
+    {
+      "name": "workflow_name",
+      "mode": "",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "failure_point",
+      "mode": "",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "error_type",
+      "mode": "",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "error_message",
+      "mode": "",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "input_data",
+      "mode": "",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "upload_timestamp",
+      "mode": "",
+      "type": "DATETIME",
+      "description": "",
+      "fields": []
+    }
+  ]

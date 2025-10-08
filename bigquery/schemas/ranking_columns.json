@@ -1,0 +1,9 @@
+[
+    {
+      "name": "name",
+      "mode": "",
+      "type": "STRING",
+      "description": "name of construct_connect_feed column",
+      "fields": []
+    }
+  ]

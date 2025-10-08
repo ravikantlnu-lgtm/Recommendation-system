@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://insight.cmdgroup.com/schemas/schDataLinkConfV1.4.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://insight.cmdgroup.com/schemas/schDataLinkConfV1.4.xsd" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:element name="Projects">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Project" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Valuation" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:attribute name="Value" type="xs:string"/>
+                                    <xs:attribute name="Currency" type="dls.Currency"/>
+                                    <xs:attribute name="ValueType" type="dls.ValueType" />
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Parameters" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Parameter">
+                                            <xs:complexType>
+                                                <xs:attribute name="Ownership" type="dls.Ownership"/>
+                                                <xs:attribute name="WorkType" type="dls.WorkType"/>
+                                                <xs:attribute name="CommenceDate" type="xs:date"/>
+                                                <xs:attribute name="CompletionDate" type="xs:date"/>
+                                                <xs:attribute name="FloorsAboveGround" type="xs:integer"/>
+                                                <xs:attribute name="FloorsBelowGround" type="xs:integer"/>
+                                                <xs:attribute name="FloorArea" type="xs:unsignedLong"/>
+                                                <xs:attribute name="SiteArea" type="xs:unsignedLong"/>
+                                                <xs:attribute name="ParkingSpaces" type="xs:long"/>
+                                                <xs:attribute name="Structures" type="xs:long"/>
+                                                <xs:attribute name="Units" type="xs:long"/>
+                                                <xs:attribute name="MandatoryPreBidConferenceDate" type="xs:date"/>
+                                                <xs:attribute name="ContractType" type="dls.ContractType"/>
+                                                <xs:attribute name="FloorAreaUnitofMeasure" type="dls.FloorAreaUnitOfMeasure"/>
+                                                <xs:attribute name="SiteAreaUnitofMeasure" type="dls.SiteAreaUnitOfMeasure"/>
+                                                <xs:attribute name="GreenBuildingCertification" type="dls.GreenBuildingCertification"/>
+                                                <xs:attribute name="LEEDCertificationIntent" type="dls.LEEDCertificationIntent"/>
+                                                <xs:attribute name="IsSingleTrade" type="xs:boolean" />
+                                                <xs:attribute name="SingleTradeClassification" type="xs:string" />
+                                                <xs:attribute name="BidDate" type="xs:date"/>
+                                                <xs:attribute name="BidTime" type="xs:string"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="DocumentAvailability" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:attribute name="Plans" type="xs:boolean"/>
+                                    <xs:attribute name="Specs" type="xs:boolean"/>
+                                    <xs:attribute name="Addenda" type="xs:boolean"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="ParentCategories" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="PrimaryCategoryName" type="dls.SubCategory" maxOccurs="1"/>
+                                        <xs:element name="ParentCategory" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="SubCategories">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="SubCategory" type="dls.SubCategory" maxOccurs="unbounded"/>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute name="Name" type="xs:string"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+
+                            <xs:element name="StageComments" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="StageComment" type="dls.StageComment" minOccurs="0" maxOccurs="unbounded"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Addresses" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Address" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="AddressLine1" type="dls.AddressLine"/>
+                                                    <xs:element name="AddressLine2" type="dls.AddressLine"/>
+                                                    <xs:element name="City" type="dls.City"/>
+                                                    <xs:element name="StateProvince" type="dls.State"/>
+                                                    <xs:element name="ZipPostalCode" type="dls.Zip"/>
+                                                    <xs:element name="County" type="dls.County" />
+                                                    <xs:element name="CountryRegion" type="dls.Country"/>
+                                                    <xs:element name="Latitude" type="xs:decimal"/>
+                                                    <xs:element name="Longitude" type="xs:decimal"/>
+                                                </xs:sequence>
+                                                <xs:attribute name="ProjectAddressType" type="dls.AddressType" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>							
+                            <xs:element name="Contracts" minOccurs="0">														
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Contract" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:attribute name="BidDate" type="xs:date"/>
+                                                <xs:attribute name="Conditions" type="dls.Conditions"/>
+                                                <xs:attribute name="Bonding" type="dls.Bonding"/>
+                                                <xs:attribute name="PlansFrom" type="dls.Role"/>
+                                                <xs:attribute name="BidsTo" type="dls.Role"/>
+                                                <xs:attribute name="BidTime" type="xs:string"/>
+                                                <xs:attribute name="BidDateAsap" type="xs:boolean"/>
+                                                <xs:attribute name="BidDateHold" type="xs:boolean"/>
+                                                <xs:attribute name="Classification" type="dls.ClassificationType"/>
+                                                <xs:attribute name="Invitation" type="dls.InvitationNumber"/>
+                                                <xs:attribute name="BidType" type="dls.BidType"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>							
+							<xs:element name="ProjectEvents" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="ProjectEvent" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Event" minOccurs="0" type="xs:string"/>
+													<xs:element name="EventDate" minOccurs="0" type="xs:date"/>
+													<xs:element name="EventTime" minOccurs="0" type="xs:string"/>															
+													<xs:element name="EventDetails" minOccurs="0" type="xs:string"/>	
+													
+												</xs:sequence>                                                                        
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+                              </xs:element>							
+                            <xs:element name="Companies" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Company" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="Contacts" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="Contact" minOccurs="0" maxOccurs="unbounded">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element name="Email" minOccurs="0" type="dls.Email"/>
+                                                                            <xs:element name="PhoneNumber" minOccurs="0" type="dls.PhoneNumber"/>
+                                                                            <xs:element name="Extension" minOccurs="0" type="xs:string"/>
+																			<xs:element name="LinkedInURL" minOccurs="0" type="xs:string"/>
+                                                                        </xs:sequence>
+                                                                        <xs:attribute name="Name" type="dls.ContactName"/>
+                                                                        <xs:attribute name="ContactID" type="xs:string"/>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="Addresses" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="Address" minOccurs="0" maxOccurs="unbounded">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element name="AddressLine1" type="dls.AddressLine"/>
+                                                                            <xs:element name="AddressLine2" minOccurs="0" type="dls.AddressLine"/>
+                                                                            <xs:element name="City" type="dls.City"/>
+                                                                            <xs:element name="StateProvince" type="dls.State"/>
+                                                                            <xs:element name="ZipPostalCode" minOccurs="0" type="dls.Zip"/>
+                                                                            <xs:element name="County" type="dls.County"/>
+                                                                            <xs:element name="CountryRegion" type="dls.Country"/>
+                                                                        </xs:sequence>
+                                                                        <xs:attribute name="AddressType" type="dls.AddressType" />
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="Phones" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="Phone" minOccurs="0" maxOccurs="unbounded">
+                                                                    <xs:complexType>
+                                                                        <xs:simpleContent>
+                                                                            <xs:extension base="dls.PhoneNumber">
+                                                                                <xs:attribute name="PhoneType" type="dls.PhoneType" />
+                                                                            </xs:extension>
+                                                                        </xs:simpleContent>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="Email" type="dls.Email" minOccurs="0"/>
+                                                    <xs:element name="Website" type="dls.URL" minOccurs="0"/>
+                                                    <xs:element name="ParticipantRoles" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="ParticipantRole">
+                                                                    <xs:complexType>
+                                                                        <xs:attribute name="RoleClassification" type="dls.Role"></xs:attribute>
+                                                                        <xs:attribute name="ContactName" type="xs:string"></xs:attribute>
+																		<xs:attribute name="RoleStatus" type="xs:string"></xs:attribute>
+																		<xs:attribute name="ContactId" type="xs:string"></xs:attribute>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="PlanHolders" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="PlanHolder">
+                                                                    <xs:complexType>
+                                                                        <xs:attribute name="RoleClassification" type="dls.Role"></xs:attribute>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="BidderRoles" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="Bidder" minOccurs="0" maxOccurs="unbounded">
+                                                                    <xs:complexType>
+                                                                        <xs:attribute name="BidderClassification" type="xs:string"/>
+                                                                        <xs:attribute name="BidValue" type="dls.Currency"/>
+                                                                        <xs:attribute name="BidRank" type="xs:unsignedInt"/>
+                                                                        <xs:attribute name="BidWithdrawDate" type="xs:date"/>
+                                                                        <xs:attribute name="BidCreateDate" type="xs:date"/>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="ClassificationTypes" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="ClassificationType" minOccurs="0" maxOccurs="unbounded">
+                                                                    <xs:complexType>
+                                                                        <xs:attribute name="Rank" type="xs:unsignedInt"/>
+                                                                        <xs:attribute name="Type" type="dls.ClassificationType"/>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="CompanySummarizations" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="CompanySummary" minOccurs="0" maxOccurs="unbounded">
+                                                                    <xs:complexType>
+                                                                        <xs:attribute name="CompanySummaryDate" type="xs:date"/>
+                                                                        <xs:attribute name="Summary" type="dls.Summary"/>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="ParentCompany" minOccurs="0" maxOccurs="unbounded">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="DataSource" type="xs:string"/>
+                                                                <xs:element name="CompanyId" type="xs:string"/>
+                                                                <xs:element name="CompanyType" type="xs:string" minOccurs="0"/>
+                                                                <xs:element name="CompanyHierarchyType" type="xs:string"/>
+                                                                <xs:element name="Name" type="xs:string"/>
+                                                                <xs:element name="Phones" minOccurs="0">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+																			<xs:element name="Phone" minOccurs="0" maxOccurs="unbounded">
+																				<xs:complexType>
+																					<xs:simpleContent>
+																						<xs:extension base="dls.PhoneNumber">
+																							<xs:attribute name="PhoneType" type="dls.PhoneType" />
+																						</xs:extension>
+																					</xs:simpleContent>
+																				</xs:complexType>
+																			</xs:element>
+                                                                        </xs:sequence>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                                <xs:element name="Email" type="dls.Email" minOccurs="0"/>
+                                                                <xs:element name="WebSite" type="dls.URL" minOccurs="0"/>
+                                                                <xs:element name="ParentCompanyAddress" minOccurs="0" maxOccurs="unbounded">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+																			<xs:element name="Address" minOccurs="0" maxOccurs="unbounded">
+																				<xs:complexType>
+																					<xs:sequence>
+																						<xs:element name="AddressLine1" type="dls.AddressLine"/>
+																						<xs:element name="AddressLine2" minOccurs="0" type="dls.AddressLine"/>
+																						<xs:element name="City" type="dls.City"/>
+																						<xs:element name="StateProvince" type="dls.State"/>
+																						<xs:element name="ZipPostalCode" minOccurs="0" type="dls.Zip"/>
+																						<xs:element name="County" minOccurs="0"  type="dls.County"/>
+																						<xs:element name="CountryRegion" type="dls.Country"/>
+																					</xs:sequence>
+																					<xs:attribute name="AddressType" type="dls.AddressType" />
+																				</xs:complexType>
+																			</xs:element>
+                                                                        </xs:sequence>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute name="Role" type="dls.Role"/>
+                                                <xs:attribute name="BiddingRole" type="dls.Role"/>
+                                                <xs:attribute name="Name" type="dls.Name"/>
+                                                <xs:attribute name="URL" type="dls.URL" default="Not available"/>
+                                                <xs:attribute name="LastUpdate" type="xs:date"/>
+                                                <xs:attribute name="CompanyID" type="xs:long"/>
+                                                <xs:attribute name="DataSourceID" type="xs:string"/>
+                                                <xs:attribute name="UpdateText" type="xs:string"/>												
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Users" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="User" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="Queries" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="Query" minOccurs="0" maxOccurs="unbounded">
+                                                                    <xs:complexType>
+                                                                        <xs:attribute name="QueryId" type="xs:string"/>
+                                                                        <xs:attribute name="QueryName" type="xs:string"/>
+                                                                        <xs:attribute name="DocCenterUrl" type="dls.URL"/>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute name="UserId" type="xs:string"/>
+                                                <xs:attribute name="UserName" type="xs:string"/>
+                                                <xs:attribute name="UserFullName" type="xs:string"/>
+                                                <xs:attribute name="ProjectFlaggedForExport" type="xs:boolean" default="false"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="UpdateSummarizations" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="UpdateSummary" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:attribute name="UpdateSummaryDate" type="xs:date"/>
+                                                <xs:attribute name="Summary" type="dls.Summary"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="PlanSpecs" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="PlanSpec" minOccurs="0">
+<!--
+<PlanSpec Deposit="100.00" URL="http://somewhere.com" From="RCD">
+    <PlanRoom Bin="Bin" Name="Alberta Plan Room" URL="http://AlbertaRoom.com"/>
+    <DocCenterUrl>http://DocCenterUrl.com</DocCenterUrl>
+</PlanSpec>
+-->
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="PlanRoom" minOccurs="0" maxOccurs="unbounded">
+                                                        <xs:complexType>
+                                                            <xs:attribute name="Bin" type="xs:string" />
+                                                            <xs:attribute name="PlanRoom" type="dls.PlanRoom" />
+                                                            <xs:attribute name="URL" type="dls.URL" default="Not available" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="DocCenterUrl" type="dls.URL" minOccurs="0"/>
+                                                </xs:sequence>
+                                                <xs:attribute name="Deposit" type="xs:string"/>
+                                                <xs:attribute name="URL" type="dls.URL" default="Not available"/>
+                                                <xs:attribute name="From" type="dls.Role"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+
+                            <xs:element name="Details" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Detail" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:string">
+                                                        <xs:attribute name="DetailType" type="dls.DetailType" />
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Materials" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Material" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="dls.Description">
+                                                        <xs:attribute name="Code" type="xs:long" />
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="RSMeansMaterialDivisions" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Division" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="Material" minOccurs="0" maxOccurs="unbounded">
+                                                        <xs:complexType>
+                                                            <xs:simpleContent>
+                                                                <xs:extension base="dls.Description">
+                                                                    <xs:attribute name="Code" type="xs:long" />
+                                                                    <xs:attribute name="MaterialCostValue" type="xs:decimal"/>
+                                                                    <xs:attribute name="InstallationCostValue" type="xs:decimal"/>
+                                                                    <xs:attribute name="TotalCostValue" type="xs:decimal"/>
+                                                                </xs:extension>
+                                                            </xs:simpleContent>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute name="Description" type="dls.Description"/>
+                                                <xs:attribute name="Code" type="xs:long"/>
+                                                <xs:attribute name="MaterialCostValue" type="xs:decimal"/>
+                                                <xs:attribute name="InstallationCostValue" type="xs:decimal"/>
+                                                <xs:attribute name="TotalCostValue" type="xs:decimal"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Notes">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Note" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:attribute name="UserId" type="xs:string"/>
+                                                <xs:attribute name="UserName" type="xs:string"/>
+                                                <xs:attribute name="NoteId" type="xs:string"/>
+                                                <xs:attribute name="NoteText" type="xs:string"/>
+                                                <xs:attribute name="CreateDate" type="xs:dateTime"/>
+                                                <xs:attribute name="ModifyDate" type="xs:dateTime"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="ListDate" type="xs:date"></xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="ProjectID" type="xs:long"/>
+                        <xs:attribute name="DataSourceID" type="xs:string"/>
+                        <xs:attribute name="Title" type="dls.Title"/>
+                        <xs:attribute name="Stage" type="dls.Stage"/>
+                        <xs:attribute name="URL" type="dls.URL" default="Not available"/>
+                        <xs:attribute name="UpdateDate" type="xs:date"/>
+                        <xs:attribute name="ProjectParentID" type="xs:long"/>
+                        <xs:attribute name="IsProspective" type="xs:boolean"/>
+                        <xs:attribute name="UpdateText" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="Version" type="xs:decimal" use="required"/>
+            <xs:attribute name="Copyright" type="xs:string" use="required"/>
+            <xs:attribute name="ExportDate" type="xs:date" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="dls.StageComment">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.URL">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.Currency">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="20"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.Title">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="180"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.AddressLine">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="128"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.State">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="50"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.City">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.Zip">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="20"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.County">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="60"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.Country">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="120"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.InvitationNumber">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="80"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.Conditions">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+    <xs:simpleType name="dls.Bonding">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="180"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.Name">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.ContactName">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.PhoneNumber">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.Summary">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.Description">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="180"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.Stage">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="180"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.SubCategory">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="180"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.ValueType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="20"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.AddressType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="180"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.Role">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="180"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.ClassificationType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="180"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.PhoneType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="180"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.BidType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="180"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.WorkType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="180"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.Ownership">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="180"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.DetailType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="180"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.PlanRoom">
+        <xs:restriction base="xs:string">
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.ContractType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="180"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.FloorAreaUnitOfMeasure">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.SiteAreaUnitOfMeasure">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.GreenBuildingCertification">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.LEEDCertificationIntent">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="dls.Email">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

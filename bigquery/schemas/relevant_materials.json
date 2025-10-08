@@ -1,0 +1,30 @@
+[
+  {
+    "name": "division",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "Material division",
+    "fields": []
+  },
+  {
+    "name": "material",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "Material name",
+    "fields": []
+  },
+  {
+    "name": "code",
+    "mode": "NULLABLE",
+    "type": "INTEGER",
+    "description": "Material code",
+    "fields": []
+  },
+  {
+    "name": "source",
+    "mode": "NULLABLE",
+    "type": "STRING",
+    "description": "data source",
+    "fields": []
+  }
+]

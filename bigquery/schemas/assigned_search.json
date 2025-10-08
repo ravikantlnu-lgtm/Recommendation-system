@@ -1,0 +1,44 @@
+[
+  {
+    "name": "project_id",
+    "mode": "",
+    "type": "STRING",
+    "description": "ProjectId from primary_project_lead ",
+    "fields": []
+  },
+  {
+    "name": "search_id",
+    "mode": "",
+    "type": "STRING",
+    "description": "Search ID from CRM searches (UUID)",
+    "fields": []
+  },
+  {
+    "name": "territory_id",
+    "mode": "",
+    "type": "STRING",
+    "description": "Territory ID from CRM territories (UUID)",
+    "fields": []
+  },
+  {
+    "name": "time_created",
+    "mode": "",
+    "type": "DATETIME",
+    "description": "Time Created from Construct_connect_feed",
+    "fields": []
+  },
+  {
+    "name": "is_related",
+    "mode": "",
+    "type": "STRING",
+    "description": "'YES' if project matched to search, else 'NO'",
+    "fields": []
+  }, 
+  { 
+    "name": "materials_valuation", 
+    "mode": "",
+    "type": "STRING",
+    "description": "Valuation of materials for each product category in the project in JSON format",
+    "fields": []
+  }
+]

@@ -1,0 +1,53 @@
+name: 'Manual PubSub Topic Creation'
+
+on:
+  workflow_dispatch: 
+    inputs:
+      environment:
+        description: 'Select environment (dev or prod)'
+        required: true
+        type: choice
+        options:
+          - dev
+          - prod
+
+jobs:
+  run-pubsub-script:
+    name: 'Run PubSub Creation Script'
+    runs-on: ubuntu-24.04
+    environment: ${{ github.event.inputs.environment }}
+    defaults:
+      run:
+        working-directory: deploy
+
+    steps:
+      - name: 'Checkout Code'
+        uses: actions/checkout@v2
+
+      # Authenticate to Google Cloud
+      - name: 'Authenticate to Google Cloud'
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+      # Set up Google Cloud SDK
+      - name: 'Set up Google Cloud SDK'
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+
+      # Set up Python 3.9
+      - name: 'Set up Python 3.9'
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: 'Run PubSub Creation Script'
+        run: |
+          if [ "${{ github.event.inputs.environment }}" == "dev" ]; then
+            chmod +x create_pubsub_topic_dev.sh
+            ./create_pubsub_topic_dev.sh
+          elif [ "${{ github.event.inputs.environment }}" == "prod" ]; then
+            chmod +x create_pubsub_topic_prod.sh
+            ./create_pubsub_topic_prod.sh
+          fi

@@ -1,0 +1,599 @@
+[
+    {
+      "name": "DRNumber",
+      "mode": "NULLABLE",
+      "type": "INTEGER",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "VersionNumber",
+      "mode": "NULLABLE",
+      "type": "INTEGER",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "DodgeReportType",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "ProjectURL",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "EmailAddress",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "DateOfFirstExport",
+      "mode": "NULLABLE",
+      "type": "DATE",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "DateOfLastExport",
+      "mode": "NULLABLE",
+      "type": "DATE",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "DateOfCurrentExport",
+      "mode": "NULLABLE",
+      "type": "DATE",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "FirstIssueDate",
+      "mode": "NULLABLE",
+      "type": "DATE",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "LastIssueDate",
+      "mode": "NULLABLE",
+      "type": "DATE",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "ReportDate",
+      "mode": "NULLABLE",
+      "type": "DATE",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "ProjectTitle",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "Lat",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "Long",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "Address",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "City",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "State",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "County",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "Zip",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "Country",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "PrimaryStage",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "SecondaryStage",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "BidDate",
+      "mode": "NULLABLE",
+      "type": "DATE",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "BidTime",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "BidZone",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "SubmitBidsTo",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "TargetStartDate",
+      "mode": "NULLABLE",
+      "type": "DATE",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "TargetCompletionDate",
+      "mode": "NULLABLE",
+      "type": "DATE",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "ValuationEstLow",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "ValuationEstHigh",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "Valuation",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "MarketSegment",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "PrimaryProjectType",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "SecondaryProjectType",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "SquareFootage",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "TypeOfWork",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "OwnershipType",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "StatusText",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "ProjectNote",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "BidBond",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "SpecialCode",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "PlansAvailableFrom",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "ArchitecturalPlansBy",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "StructuralPlansBy",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "PlansRemark",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "PlansLocation",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "PlanAvailable",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "SpecAvailable",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "DeliverySystem",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "FrameType",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "StoriesAbove",
+      "mode": "NULLABLE",
+      "type": "INTEGER",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "StoriesBelow",
+      "mode": "NULLABLE",
+      "type": "INTEGER",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "NoOfBuildings",
+      "mode": "NULLABLE",
+      "type": "INTEGER",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "StructuralInfo",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "FeaturesInfo",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "SpecAlerts",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "SearchNames",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "Companies",
+      "mode": "NULLABLE",
+      "type": "RECORD",
+      "description": "",
+      "fields": [
+        {
+          "name": "Company",
+          "mode": "REPEATED",
+          "type": "RECORD",
+          "description": "",
+          "fields": [
+            {
+              "name": "BidAmount",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "BidRank",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "CKMSID",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "CompanyAddress",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "CompanyCity",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "CompanyCountry",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "CompanyCounty",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "CompanyFax",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "CompanyURL",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "CompanyLat",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "CompanyLong",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "CompanyName",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "CompanyState",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "CompanyTelephone",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "CompanyWebsite",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "CompanyZip",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "ContactEmail",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "ContactID",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "ContactName",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "ContactPhone",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "ContactTitle",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "FactorKey",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            },
+            {
+              "name": "FactorType",
+              "mode": "NULLABLE",
+              "type": "STRING",
+              "description": "",
+              "fields": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sourceFile",
+      "mode": "NULLABLE",
+      "type": "STRING",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "sourceFileCreationTime",
+      "mode": "NULLABLE",
+      "type": "DATETIME",
+      "description": "",
+      "fields": []
+    },
+    {
+      "name": "time_created",
+      "mode": "",
+      "type": "DATETIME",
+      "description": "Record creation time in BigQuery.",
+      "fields": []
+    }
+  ]
