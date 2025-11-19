@@ -8,6 +8,7 @@ from logging_config import log_default
 from pydantic import BaseModel
 from services import BigQueryManager, GeminiClient, GeminiClientConfig
 from utils.common import fetch_latest_model_endpoint, get_secret
+from utils.prompts import ASSIGN_PROJECT_SEARCH_PROMPT
 
 settings = get_settings()
 
@@ -86,41 +87,11 @@ def run_prompt_assign_project_search(
         str: The JSON response containing the project relevance classification.
     """
 
-    prompt = f"""
-        **Role:** You are an AI assistant specialized in analyzing construction project data.
-
-        **Objective:** Determine if a given ConstructConnect project (provided as JSON) is relevant to a specific Search Name by evaluating a set of boolean filters against the project's details and **assessing overall context**. 
-
-        **Instructions: Think step-by-step and formulate your logic:**
-        
-        1. **Carefully analyze the provided JSON data** representing ConstructConnect project to understand relevant fields and data.
-
-        2. **Analyze the Boolean filters logic** corresponding to the **Search**. 
-
-        3. **Evaluate the project details against the Boolean filters:** 
-            a. Determine if the project technically matches the boolean filter logic. Identify the specific terms that caused the match. 
-            b. **Assess the context and significance of the matches**. How is the matched term being used in the project? Does the term appear in the primary scope of work or core specifications?
-            c. **Consider the overall project focus**. Is the matched concept a major component of the project, or a minor part?
-
-        4. **Formulate Reasoning:** Construct a clear and concise explanation for your decision.
-
-        5. **Respond as YES or NO with a reason for your answer in a valid ProjectSearchAssignmentResult Object**. **RETURN ONLY THE ProjectSearchAssignmentResult Object.**
-
-    **JSON Project Data:** {cc_project_json}
-
-    **Search:**
-    {search_name}
-   
-    **Search Boolean Filters:**
-    {search_query}
-
-    **Example Output Format:**
-        {{
-            "Project_related_to_Search": YES/NO, 
-            "Reasoning": "reason for relation response"
-        }} 
-       
-    """
+    prompt = ASSIGN_PROJECT_SEARCH_PROMPT.format(
+        cc_project_json=cc_project_json,
+        search_name=search_name,
+        search_query=search_query,
+    )
 
     model, is_tuned_model = fetch_latest_model_endpoint(
         llm_prompt_type="assign_project_search"

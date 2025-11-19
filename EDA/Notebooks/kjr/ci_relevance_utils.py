@@ -19,6 +19,11 @@ project_root = os.path.abspath(
 cloud_function_dir = os.path.join(project_root, "CloudFunction/utils")
 sys.path.insert(0, cloud_function_dir)
 
+from prompts import (
+    CI_REASONING_PROMPT,
+    CI_RELEVANCE_PROMPT_V1,
+    CI_RELEVANCE_PROMPT_V2,
+)
 from relevance_prompt_examples import RELEVANCE_PROMPT_EXAMPLES
 
 
@@ -61,76 +66,11 @@ def relevance_prompt_v1(
     search_terms: str,
     relevance_examples: dict = RELEVANCE_PROMPT_EXAMPLES,
 ):
-    prompt = f"""
-
-     **Objective:** Classify ConstructConnect projects as very high, high, moderate, low, very low, or not relevant.
-
-        **Instructions:**
-
-        1. **Analyze the provided JSON data:** Understand the project details, including relevant fields and data points. The JSON data representing ConstructConnect project is provided in **Project Data**.
-
-        2. **Utilize Search Terms:** Identify relevant products, materials, and phrases. The search terms are provided in the **Search Terms** section.
-
-        3. **Consider Project Types:** Identify project type. Determine if the project is specialized and has high opportunity for work and visibility. 
-        Examples of specialized projects are: 
-            * Hospital and health services
-            * Churches
-            * Commercial real estate
-            * Large residential apartments/dormitories
-            * University/College buildings
-            * Auditoriums
-            * Senior living homes
-        Examples of non-specialized projects with very low priority are:
-            * One-time projects
-            * Small residential projects
-            * Golf courses
-
-        4. **Identify Building Type**: Identify building type, including interior complexity and specialized work. 
-
-        5. **Identify Locations and Distance:** Identify the project location and distance from nearest branch. Consider if a branch is too far away from a location. 
-        Urban areas should have closer branches, while rural areas can have branches further away.
-
-        6. **Identify Associated Brands:** Identify associated brands to the product. Associated brands include: 
-            * Armstrong Ceilings 
-            * Sto 
-            * Dryvit
-
-        7. **Identify Available Plans:** Identify if the project has detailed and available plans and specs.
-
-        8. **Classify Projects:**
-            a. Prioritize projects based on how relevant the inputs are to the search terms.
-            b. Next, prioritize projects based on the project type, as specified in the previous steps. Deprioritize non-specialized projects. 
-            c. Next, prioritize building types based on how complex the interior work is, as specified in the previous steps. Deprioritize projects with little interior work.
-            d. Next, prioritize projects that have reasonable distance to the nearest branch, as specified in the previous steps. Deprioritize projects that are too far away from a branch.
-            e. Next, prioritize projects that have associated brands, as specified in the previous steps. Lack of associated brands will not lower the priority.
-            f. Next, increase priority if the project has detailed plans and specs. Lack of plans and specs will not lower the priority. 
-            g. When other factors are equal, prioritize higher-value projects (e.g., higher total dollar amount).
-
-        8. **Estimate Relevancy:** Estimate the relevancy of each project based on the above factors and total dollar amount.
-        9. **Respond in ProjectClassification Object Format** as VERY_HIGH, HIGH, MODERATE, LOW, VERY_LOW, NOT_RELEVANT with a reason for your answer in a valid **ProjectClassification object** as provided in the Example Output below. **RETURN ONLY THE ProjectClassification Object**
-
-        **Input Data:**
-            **Project Data:**
-            {cc_project_json}
-
-            **Search**
-            {search}
-
-            **Boolean Filter**
-            {search_terms}
-
-        **Example Output:**
-         [
-          
-          {{"Relevance": "Not Relevant", "Reasoning": "The project details and materials do not contain any mention of the search terms. Therefore, it is not relevant."}} 
-          {{"Relevance": "Very High", "Reasoning": "Project mentions 'roofing materials", "concrete", "fry", and "steel", matching our search terms. The project is commercial, has high visibility, and opportunity for specialized work."}}
-          {{"Relevance": "Low", "Reasoning": "Project has some search terms in the description such as "steel". The project will require little interior work and is a one-time job."}}
-          {{"Relevance": "Moderate", "Reasoning": "Project mentions 'steel beams' and 'concrete mix,' matching our search terms "STEEL" and "CONCRETE". The project has moderate valuation."}}
-          {{"Relevance": "High", "Reasoning": "Project mentions 'steel beams," "concrete," and "gysum," matching many of the provided search terms. The project has high dollar valuation and will require higher specs. "}}
-          
-        ]
-
-        """
+    prompt = CI_RELEVANCE_PROMPT_V1.format(
+        cc_project_json=cc_project_json,
+        search=search,
+        search_terms=search_terms,
+    )
     if relevance_examples:
         examples_prompt = ""
 
@@ -215,86 +155,11 @@ def relevance_prompt_v2(
     search_terms: str,
     relevance_examples: dict = RELEVANCE_PROMPT_EXAMPLES,
 ):
-    prompt = f"""
-
-     **Objective:** Classify ConstructConnect projects as very high, high, moderate, low, very low, or not relevant.
-
-        **Instructions:**
-
-        1. **Analyze the provided JSON data:** Understand the project details, including relevant fields and data points. The JSON data representing ConstructConnect project is provided in **Project Data**.
-
-        2. **Utilize Search Terms:** Identify relevant products, materials, and phrases. The search terms are provided in the **Search Terms** section.
-
-        3. **Consider Project Types:** Identify project type. Determine if the project is specialized and has high opportunity for work and visibility. 
-        Examples of specialized projects are: 
-            * Hospital and health services
-            * Churches
-            * Commercial real estate
-            * Large residential apartments/dormitories
-            * University/College buildings
-            * Auditoriums
-            * Senior living homes
-        Examples of non-specialized projects with very low priority are:
-            * One-time projects
-            * Small residential projects
-            * Golf courses
-
-        4. **Identify Building Type**: Identify building type, including interior complexity and specialized work. 
-
-        5. **Identify Locations and Distance:** Identify the project location and distance from nearest branch. Consider if a branch is too far away from a location. 
-        Urban areas should have closer branches, while rural areas can have branches further away.
-
-        6. **Identify Associated Brands:** Identify associated brands to the product. Associated brands include: 
-            * Armstrong Ceilings 
-            * Sto 
-            * Dryvit
-
-        7. **Identify Available Plans:** Identify if the project has detailed and available plans and specs.
-
-        8. **Classify Projects:**
-            a. Prioritize projects based on how relevant the inputs are to the search terms.
-            b. Next, prioritize projects based on the project type, as specified in the previous steps. Deprioritize non-specialized projects. 
-            c. Next, prioritize building types based on how complex the interior work is, as specified in the previous steps. Deprioritize projects with little interior work.
-            d. Next, prioritize projects that have reasonable distance to the nearest branch, as specified in the previous steps. Deprioritize projects that are too far away from a branch.
-            e. Next, prioritize projects that have associated brands, as specified in the previous steps. Lack of associated brands will not lower the priority.
-            f. Next, increase priority if the project has detailed plans and specs. Lack of plans and specs will not lower the priority. 
-            g. When other factors are equal, prioritize higher-value projects (e.g., higher total dollar amount).
-
-        9. **Estimate Relevancy:** Estimate the relevancy of each project based on the above factors and total dollar amount.
-
-        10. **Confidence Score**: Provide a confidence score between 0.0 (Low Confidence) and 1.0 (High Confidence) reflecting your certainty in the assigned **Relevance Score**.
-            * **Base this confidence primarily on the clarity, completeness, and consistency of the input information** used to evaluate the factors in Step 8.
-            * **Calibration Guide:**
-                * **> 0.9:** Reserve for cases where **ALL critical factors** are evaluated using **explicit, complete, and unambiguous** input data. Inputs strongly support the relevance score.
-                * **0.7 - 0.9:** Use when most factors (including critical ones) are clear, but perhaps some **secondary information** is inferred/missing, or there's **very minor ambiguity** that doesn't significantly impact the overall relevance assessment.
-                * **0.3 - 0.6:** Use when **one or more critical factors** rely partially on **inference, contain some ambiguity, or have missing details**, OR if multiple secondary factors are uncertain. The relevance score is plausible but not definitive.
-                * **< 0.3:** Use when there is **significant missing information, ambiguity, or contradiction** affecting **one or more critical factors**, making the calculated Relevance Score highly speculative or uncertain.
-
-        11. **Respond in ProjectClassificationConfidenceInterval Object Format** as VERY_HIGH, HIGH, MODERATE, LOW, VERY_LOW, NOT_RELEVANT with a reason and confidence for your answer in a valid **ProjectClassificationConfidenceInterval object** as provided in the Example Output below.
-            **RETURN ONLY THE ProjectClassificationConfidenceInterval Object**
-
-        **Input Data:**
-            **Project Data:**
-            {cc_project_json}
-
-            **Search**
-            {search}
-
-            **Boolean Filter**
-            {search_terms}
-
-        **Example Output:**
-         [
-          
-          {{"Relevance": "Not Relevant", "Reasoning": "The project details and materials do not contain any mention of the search terms. Therefore, it is not relevant.", "Confidence": Confidence}} 
-          {{"Relevance": "Very High", "Reasoning": "Project mentions 'roofing materials", "concrete", "fry", and "steel", matching our search terms. The project is commercial, has high visibility, and opportunity for specialized work.", "Confidence": Confidence}}
-          {{"Relevance": "Low", "Reasoning": "Project has some search terms in the description such as "steel". The project will require little interior work and is a one-time job.", "Confidence": Confidence}}
-          {{"Relevance": "Moderate", "Reasoning": "Project mentions 'steel beams' and 'concrete mix,' matching our search terms "STEEL" and "CONCRETE". The project has moderate valuation.", "Confidence": Confidence}}
-          {{"Relevance": "High", "Reasoning": "Project mentions 'steel beams," "concrete," and "gysum," matching many of the provided search terms. The project has high dollar valuation and will require higher specs. ", "Confidence": Confidence}}
-          
-        ]
-
-        """
+    prompt = CI_RELEVANCE_PROMPT_V2.format(
+        cc_project_json=cc_project_json,
+        search=search,
+        search_terms=search_terms,
+    )
     if relevance_examples:
         examples_prompt = ""
 
@@ -479,47 +344,12 @@ def reasoning_prompt_v1(
     relevance_classification: str,
 ):
 
-    prompt = f"""
-
-      **Objective:** Generate the reasoning for a **given** ConstructConnect project relevance classification.
-
-      **Instructions:**
-
-      1.  **Analyze the provided JSON data:** Understand the project details, including relevant fields and data points. The JSON data representing the ConstructConnect project is provided in **Project Data**.
-      2.  **Utilize Search Terms:** Identify mentions of relevant products, materials, and phrases within the project data. The search terms are provided in the **Search Terms** section and potentially refined in the **Search** section.
-      3.  **Consider Project Types:** Identify the project type. Note if it's a specialized type with high opportunity (e.g., Hospital, University, Commercial Real Estate, Large Residential) or a lower priority type (e.g., small residential, one-time jobs).
-      4.  **Identify Building Type**: Identify the building type and infer the potential interior complexity and need for specialized work based on it.
-      5.  **Identify Locations and Distance:** Note the project location and its distance from the nearest branch (if provided or inferable). Consider the implications of distance (urban vs. rural context).
-      6.  **Identify Associated Brands:** Check for mentions of specific associated brands like Armstrong Ceilings, Sto, Dryvit.
-      7.  **Identify Available Plans:** Note if detailed plans and specifications are mentioned as being available.
-      8.  **Analyze Project Value:** Consider the total dollar amount or valuation of the project.
-
-      9.  **Generate Reasoning:** Based on your analysis of the factors above (Steps 1-8) and the **provided Relevance Classification**, formulate a concise reasoning statement. This statement must explain *why* the project aligns with the given classification by connecting specific project details (e.g., presence/strength of search term matches, project type suitability, building complexity, location factors, associated brands, plan availability, project value) to justify the **provided** relevance level.
-
-      10. **Confidence Score**: Provide a confidence score between 0.0 (Low Confidence) and 1.0 (High Confidence) reflecting your certainty in the assigned **Relevance Score** and your Reasoning.
-        * **Base this confidence primarily on the clarity, completeness, and consistency of the input information** used to generate reasoning in steps 1-8.
-        * **Calibration Guide:**
-            * **> 0.9:** Reserve for cases where **ALL critical factors** are evaluated using **explicit, complete, and unambiguous** input data.
-            * **0.7 - 0.9:** Use when most factors (including critical ones) are clear, but perhaps some **secondary information** is inferred/missing, or there's **very minor ambiguity**.
-            * **0.3 - 0.6:** Use when **one or more critical factors** rely partially on **inference, contain some ambiguity, or have missing details**, OR if multiple secondary factors are uncertain.
-            * **< 0.3:** Use when there is **significant missing information, ambiguity, or contradiction** affecting **one or more critical factors**, making the calculated Relevance and reasoning highly speculative or uncertain.
-
-
-      11. **Respond in ProjectClassification Object Format:** Output a single valid JSON **ProjectClassification object** containing the *provided* `Relevance` (matching the input Relevance Classification) and your generated `Reasoning`. **RETURN ONLY THE ProjectClassification Object**.
-
-      **Input Data:**
-          **Project Data:**
-          {json.dumps(cc_project_json)} # Ensure JSON is properly formatted string
-
-          **Search:**
-          {search}
-
-          **Boolean Filter / Search Terms:**
-          {search_terms}
-
-          **Provided Relevance Classification:**
-          {relevance_classification}
-    """
+    prompt = CI_REASONING_PROMPT.format(
+        cc_project_json=json.dumps(cc_project_json),
+        search=search,
+        search_terms=search_terms,
+        relevance_classification=relevance_classification,
+    )
 
     generation_config = {
         "temperature": 0,

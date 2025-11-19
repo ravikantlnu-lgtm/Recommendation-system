@@ -9,6 +9,7 @@ from fuzzywuzzy import fuzz
 
 from services import GeminiClient, GeminiClientConfig
 from utils.common import fetch_latest_model_endpoint, get_secret
+from utils.prompts import DUPLICATE_PROJECT_PROMPT
 
 settings = get_settings()
 
@@ -129,12 +130,12 @@ def fetch_owner_from_project_data(project_data: pd.Series, source: Literal["cons
         print(f"Error fetching owner from project data: {e}")
         return None
     
-def llm_generate_duplication_result(project_1_json: str, 
-                                    project_2_json: str, 
-                                    project_1_title: str, 
+def llm_generate_duplication_result(project_1_json: str,
+                                    project_2_json: str,
+                                    project_1_title: str,
                                     project_2_title: str,
-                                    distance: float, 
-                                    project_1_owner: str = None, 
+                                    distance: float,
+                                    project_1_owner: str = None,
                                     project_2_owner: str = None):
     
     """ 
@@ -149,62 +150,15 @@ def llm_generate_duplication_result(project_1_json: str,
         - project_2_owner (str, optional): Owner of Project 2. Defaults to None.
     """
 
-    prompt = f"""
-
-        Your task is to determine if two construction projects are duplicates of each other based on the provided details.
-
-        **Instructions:**
-        1. **Carefully analyze the provided JSON data** details for Project 1 and Project 2, including features, plans, and description of work.
-
-        2. **Analyze the project titles** to understand the context and scope of each project.
-
-        3. **Consider the distance** between the two projects, which is provided in miles. 
-
-        4. **Consider the project owners** if that information is available.
-
-        5. **Determine if the two projects are duplicates** or unsure based on the provided information. Use the overall context of the projects, including their titles, descriptions, and distance apart.
-       
-            * Information that would be relevant to the decision: 
-                - Project titles 
-                - Project descriptions 
-                - Location 
-            * Information that would not be relevant to the decision:
-                - Project IDs 
-                - Dates of actions, updates, or bids 
-                - Bid dates or amounts
-
-        6. **Formulate reasoning** for your decision. 
-        
-        7. **Respond as a "match", "no match", or "unsure"** based on your analysis, along with your reasoning.
-
-        **Project 1:** 
-
-        **Title:** {project_1_title} 
-
-        {"**Owner:** " + project_1_owner if project_1_owner else ""}
-
-        **JSON Data:**
-        {project_1_json}
-
-        **Project 2:**
-
-        **Title:** {project_2_title}
-
-        {"**Owner:** " + project_2_owner if project_2_owner else ""}
-
-        **JSON Data:**
-
-        {project_2_json}
-
-        **Distance:** {distance} miles
-        
-        **Example Output Format:** 
-        {{
-            "project_match": "match" | "no_match" | "unsure",
-            "Reasoning": "Your reasoning here."
-        }}
-
-        """
+    prompt = DUPLICATE_PROJECT_PROMPT.format(
+        project_1_title=project_1_title,
+        project_1_owner=f"**Owner:** {project_1_owner}" if project_1_owner else "",
+        project_1_json=project_1_json,
+        project_2_title=project_2_title,
+        project_2_owner=f"**Owner:** {project_2_owner}" if project_2_owner else "",
+        project_2_json=project_2_json,
+        distance=distance,
+    )
     
     gemini_api_key = get_secret(
         project_number=settings.PROJECT_NUMBER,

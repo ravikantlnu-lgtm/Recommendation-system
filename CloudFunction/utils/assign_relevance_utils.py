@@ -16,6 +16,7 @@ from utils.common import (
     truncate_iso_to_seconds,
 )
 from utils.relevance_prompt_examples import RELEVANCE_PROMPT_EXAMPLES
+from utils.prompts import PROJECT_RELEVANCE_PROMPT, RELEVANCE_REASONING_PROMPT
 
 settings = get_settings()
 
@@ -365,91 +366,19 @@ def llm_prompt_project_relevance(
     historical_days: int = 30,
     relevance_examples: dict = RELEVANCE_PROMPT_EXAMPLES,
 ):
-    prompt = f"""
-
-     **Objective:** Classify ConstructConnect projects as very high, high, moderate, low, very low, or not relevant.
-
-        **Instructions:**
-
-        1. **Analyze the provided JSON data:** Understand the project details, including relevant fields and data points. The JSON data representing ConstructConnect project is provided in **Project Data**.
-
-        2. **Utilize Search Terms:** Identify relevant products, materials, and phrases. The search terms are provided in the **Search Terms** section.
-
-        3. **Consider Project Types:** Identify project type. Determine if the project is specialized and has high opportunity for work and visibility. 
-        Examples of specialized projects are: 
-            * Hospital and health services
-            * Churches
-            * Commercial real estate
-            * Large residential apartments/dormitories
-            * University/College buildings
-            * Auditoriums
-            * Senior living homes
-        Examples of non-specialized projects with very low priority are:
-            * One-time projects
-            * Small residential projects
-            * Golf courses
-
-        4. **Note the Materials Value for the Search:** Identify the valuation relevant materials, which is provided.
-
-        5. **Analyze the Historical Sales Data:** If historical sales data is provided, analyze the statistics to understand past performance. 
-            Historical data can be provided at the product level or contractor level or both.
-            * If historical sales data is provided at the product level, the data includes all products related to the search query that have been sold. 
-            * If historical sales data is provided at the contractor level, the data includes previous sales made with this project's contractor. 
-
-        6. **Identify Building Type**: Identify building type, including interior complexity and specialized work. 
-        
-        7. **Identify Building Size**: Identify the size of the project, including number of stories, height of building, and number of total buildings in the project.
-
-        8. **Identify Locations and Distance:** Identify the project location and distance from nearest branch. Consider if a branch is too far away from a location. 
-        Urban areas should have closer branches, while rural areas can have branches further away.
-
-        9. **Identify Associated Brands:** Identify associated brands to the product. Associated brands include: 
-            * Armstrong Ceilings 
-            * Sto 
-            * Dryvit
-
-        10. **Identify Available Plans:** Identify if the project has detailed and available plans and specs.
-
-        11. **Classify Projects:**
-            a. Prioritize projects based on how relevant the inputs are to the search terms.
-            b. Next, prioritize projects based on the project type, as specified in the previous steps. Deprioritize non-specialized projects. 
-            c. Next, prioritize projects which has a high valuation of relevant materials, as specified in the previous steps. Deprioritize projects with low valuation of materials.
-            d. Next, prioritize projects based on historical sales data, as specified in the previous steps. Deprioritize projects with poor historical sales for the products or with the contractor.
-            e. Next, prioritize building types based on how complex the interior work is, as specified in the previous steps. Deprioritize projects with little interior work. 
-            f. Next, prioritize projects based on the size of the building, as specified in the previous steps. Deprioritize projects with small buildings or few stories.
-            g. Next, prioritize projects that have reasonable distance to the nearest branch, as specified in the previous steps. Deprioritize projects that are too far away from a branch.
-            h. Next, prioritize projects that have associated brands, as specified in the previous steps. Lack of associated brands will not lower the priority.
-            i. Next, increase priority if the project has detailed plans and specs. Lack of plans and specs will not lower the priority. 
-            j. When other factors are equal, prioritize higher-value projects (e.g., higher total dollar amount).
-
-        12. **Estimate Relevancy:** Estimate the relevancy of each project based on the above factors and total dollar amount.
-
-        **Input Data:**
-            **Project Data:**
-            {project_data}
-
-            **Search**
-            {search}
-
-            **Boolean Filter**
-            {search_terms}
-
-            **Materials Valuation**
-            {total_valuation if total_valuation != 0.0 else "Not provided"}
-
-            **Historical Sales Data for the last {historical_days} days:** 
-            
-            {"* Relevant Products: * " + sales_data_product_location}
-            
-            {"* Sales with this Contractor: * " + sales_data_contractor_level}
-
-        **Example Output:**
-        {{
-            "Relevance": classification,
-            "Reasoning": "Reasoning for classification."
-        }}
-       
-        """
+    prompt = PROJECT_RELEVANCE_PROMPT.format(
+        project_data=project_data,
+        search=search,
+        search_terms=search_terms,
+        total_valuation=(
+            total_valuation if total_valuation != 0.0 else "Not provided"
+        ),
+        historical_days=historical_days,
+        sales_data_product_location="* Relevant Products: * "
+        + sales_data_product_location,
+        sales_data_contractor_level="* Sales with this Contractor: * "
+        + sales_data_contractor_level,
+    )
 
     if relevance_examples:
         print("Fetching examples with same search name...")
@@ -545,89 +474,20 @@ def llm_generate_relevance_reasoning(
     Generates reasoning for a given project relevance classification using an LLM.
     """
     
-    # Updated prompt focusing on generating reasoning for a given classification
-    prompt = f"""
-
-      **Objective:** Generate the reasoning for a **given** ConstructConnect project relevance classification and a confidence score.
-
-      **Instructions:**
-
-      1.  **Analyze the provided JSON data:** Understand the project details, including relevant fields and data points. The JSON data representing the ConstructConnect project is provided in **Project Data**.
-
-      2.  **Utilize Search Terms:** Identify mentions of relevant products, materials, and phrases within the project data. The search terms are provided in the **Search Terms** section and potentially refined in the **Search** section.
-
-      3.  **Consider Project Types:** Identify the project type. Note if it's a specialized type with high opportunity (e.g., Hospital, University, Commercial Real Estate, Large Residential) or a lower priority type (e.g., small residential, one-time jobs).
-
-      4.  **Identify Materials Valuation:** Identify the valuation of relevant materials provided. This is provided in the **Materials Valuation** section.
-
-      5. **Analyze the Historical Sales Data:** If historical sales data is provided, analyze the statistics to understand past performance. 
-        Historical data can be provided at the product level or contractor level or both. 
-        * If historical sales data is provided at the product level, the data includes all products related to the search query that have been sold. 
-        * If historical sales data is provided at the contractor level, the data includes previous sales made with this project's contractor. 
-
-      6.  **Identify Building Type**: Identify the building type and infer the potential interior complexity and need for specialized work based on it.
-
-      7.  **Identify Building Size**: Identify the size of the project, including number of stories, height of building, and number of total buildings in the project.
-
-      8.  **Identify Locations and Distance:** Note the project location and its distance from the nearest branch (if provided or inferable). Consider the implications of distance (urban vs. rural context).
-
-      8.  **Identify Associated Brands:** Check for mentions of specific associated brands like Armstrong Ceilings, Sto, Dryvit.
-
-      9.  **Identify Available Plans:** Note if detailed plans and specifications are mentioned as being available.
-
-      10.  **Generate Reasons:** Based on your analysis of the factors above (Steps 1-9) and the **provided Relevance Classification**, formulate a list of reasons. 
-            These must explain *why* the project aligns with the given classification by connecting specific project details to justify the relevance level.
-            Include all relevant factors from the previous steps in your reasoning. Be concise, brief, and to the point. Prioritize the most relevant factors.
-            Here is an example of a reasoning list: 
-            * Owned by Federal government
-            * Medical Facility
-            * FRP relevant material cost: $20,000
-            * Plans and specs are available
-             
-      11. **Confidence Score**: Provide a confidence score between 0.0 (Low Confidence) and 1.0 (High Confidence) reflecting your certainty in the assigned **Relevance Score** and your Reasoning.
-        * **Base this confidence primarily on the clarity, completeness, and consistency of the input information** used to generate reasoning in steps 1-8.
-        * **Calibration Guide:**
-            * **> 0.9:** Reserve for cases where **ALL critical factors** are evaluated using **explicit, complete, and unambiguous** input data.
-            * **0.7 - 0.9:** Use when most factors (including critical ones) are clear, but perhaps some **secondary information** is inferred/missing, or there's **very minor ambiguity**.
-            * **0.3 - 0.6:** Use when **one or more critical factors** rely partially on **inference, contain some ambiguity, or have missing details**, OR if multiple secondary factors are uncertain.
-            * **< 0.3:** Use when there is **significant missing information, ambiguity, or contradiction** affecting **one or more critical factors**, making the calculated Relevance and reasoning highly speculative or uncertain.
-
-      12. **Response Logic:** Do not include information directly from the project description. Do not include details about the search terms or matching the search term in your response. The reasoning should be limited to the most relevant aspects of the project that contribute to the relevance. The bullet points should prioritize information that is not included in the project description.
-
-      **Example Output Format:**
-      {{
-          "Relevance": "Provided Relevance Classification",
-          "Reasoning": [
-              "Reason 1",
-              "Reason 2",
-              "Reason 3",
-              "Reason 4"
-          ],
-          "Confidence": Confidence Score
-      }}
-
-      **Input Data:**
-          **Project Data:**
-          {json.dumps(project_data)} # Ensure JSON is properly formatted string
-
-          **Search:**
-          {search}
-
-          **Boolean Filter / Search Terms:**
-          {search_terms}
-
-          **Materials Valuation:**
-          {total_valuation if total_valuation != 0.0 else "Not provided"}
-
-          **Historical Sales Data for the last {historical_days} days:** 
-        
-            {"* Relevant Products: * " + sales_data_product_location}
-            
-            {"* Sales with this Contractor: * " + sales_data_contractor_level}
-
-          **Provided Relevance Classification:**
-          {relevance_classification}
-      """
+    prompt = RELEVANCE_REASONING_PROMPT.format(
+        project_data_json=json.dumps(project_data),
+        search=search,
+        search_terms=search_terms,
+        total_valuation=(
+            total_valuation if total_valuation != 0.0 else "Not provided"
+        ),
+        historical_days=historical_days,
+        sales_data_product_location="* Relevant Products: * "
+        + sales_data_product_location,
+        sales_data_contractor_level="* Sales with this Contractor: * "
+        + sales_data_contractor_level,
+        relevance_classification=relevance_classification,
+    )
 
     # Consider if a different llm_prompt_type string is needed if using a specific endpoint/model for reasoning
     model, is_tuned_model = fetch_latest_model_endpoint(

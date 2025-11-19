@@ -19,6 +19,7 @@ try:
     from config import get_settings
     from services import BigQueryManager, GeminiClient, GeminiClientConfig
     from utils.common import get_secret, fetch_latest_model_endpoint
+    from utils.prompts import PRODUCT_CATEGORY_PROMPT
 except ImportError as e:
     print(f"Error importing shared modules: {e}")
     print(
@@ -53,34 +54,12 @@ def create_llm_response_type(product_categories: list[str]) -> Type[Enum]:
 
 def llm_generate_product_category_for_material(
     material: str, product_categories: List[str], response_type: Type[BaseModel]
-) -> BaseModel: 
+) -> BaseModel:
     # Construct prompt
-    prompt = f"""
- 
-    Your task is to analyze a material item and determine which product category it belongs to.
-
-    **Instructions:** 
-    1. **Analyze the Material Item** provided. 
-    2. **Review the Product Category List** provided. This list contains product categories you are allowed to select from.
-    3. **Identify Which Product Category** the material belongs to. Consider the best fit for the material. Consider if the name of the material overlaps with the product category. 
-    4. **Provide Justification** for your selection, explaining why it is relevant to the product category.
-
-    Return as a JSON object with the selected product category and your reasoning. 
-
-    **Example Output Format:** 
-
-        [{{ 
-            "category": "CATEGORY_NAME",
-            "Reasoning": "Your reasoning for selecting this category."
-        }}]
-    
-    Material Item:
-    {material}
-    
-    Available Product Categories:
-    {product_categories}
-
-    """
+    prompt = PRODUCT_CATEGORY_PROMPT.format(
+        material=material,
+        product_categories=product_categories,
+    )
 
     gemini_api_key = get_secret(
         project_number=settings.PROJECT_NUMBER,
